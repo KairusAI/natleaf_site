@@ -8,8 +8,45 @@ export function CTASection() {
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
 
   return (
-    <section id="contact" className="py-24 md:py-32 bg-background" ref={containerRef}>
-      <div className="container mx-auto px-6">
+    <section id="contact" className="relative py-24 md:py-32 bg-background overflow-hidden" ref={containerRef}>
+      {/* Subtle glow spots */}
+      <div className="absolute inset-0 pointer-events-none">
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-[250px] h-[250px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, hsl(268 75% 60% / 0.1) 0%, transparent 60%)",
+            filter: "blur(45px)",
+          }}
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/3 w-[180px] h-[180px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, hsl(280 70% 55% / 0.08) 0%, transparent 60%)",
+            filter: "blur(35px)",
+          }}
+          animate={{
+            scale: [1.1, 1, 1.1],
+            opacity: [0.4, 0.7, 0.4],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+        />
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
