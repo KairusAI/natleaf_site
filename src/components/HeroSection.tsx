@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function HeroSection() {
@@ -19,10 +19,83 @@ export function HeroSection() {
       ref={containerRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero"
     >
-      {/* Background Elements */}
+      {/* Abstract Purple Light Waves Background */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent-foreground/5 rounded-full blur-3xl" />
+        {/* Main wave 1 */}
+        <motion.div 
+          className="absolute -top-1/4 -left-1/4 w-[800px] h-[800px] rounded-full opacity-20"
+          style={{
+            background: "radial-gradient(ellipse at center, hsl(270 80% 60% / 0.3) 0%, transparent 70%)",
+            filter: "blur(80px)",
+          }}
+          animate={{
+            x: [0, 50, 0],
+            y: [0, 30, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        
+        {/* Main wave 2 */}
+        <motion.div 
+          className="absolute top-1/3 -right-1/4 w-[700px] h-[700px] rounded-full opacity-15"
+          style={{
+            background: "radial-gradient(ellipse at center, hsl(280 70% 55% / 0.35) 0%, transparent 65%)",
+            filter: "blur(100px)",
+          }}
+          animate={{
+            x: [0, -40, 0],
+            y: [0, 50, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+        />
+        
+        {/* Subtle wave 3 */}
+        <motion.div 
+          className="absolute bottom-1/4 left-1/3 w-[500px] h-[500px] rounded-full opacity-10"
+          style={{
+            background: "radial-gradient(ellipse at center, hsl(260 75% 65% / 0.25) 0%, transparent 60%)",
+            filter: "blur(60px)",
+          }}
+          animate={{
+            x: [0, 30, 0],
+            y: [0, -40, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
+        />
+
+        {/* Light streak accent */}
+        <motion.div 
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[2px] opacity-5"
+          style={{
+            background: "linear-gradient(90deg, transparent 0%, hsl(270 80% 70%) 50%, transparent 100%)",
+            filter: "blur(2px)",
+          }}
+          animate={{
+            scaleX: [0.5, 1, 0.5],
+            opacity: [0.03, 0.08, 0.03],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
       </div>
 
       {/* Grid Pattern */}
@@ -40,19 +113,6 @@ export function HeroSection() {
         className="container mx-auto px-6 py-32 relative z-10"
       >
         <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border border-border mb-8"
-          >
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm text-muted-foreground">
-              Inovação em tecnologia
-            </span>
-          </motion.div>
-
           {/* Headline */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -89,29 +149,6 @@ export function HeroSection() {
             <Button variant="outline" size="lg" className="px-8">
               Ver portfólio
             </Button>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="grid grid-cols-3 gap-8 mt-20 pt-10 border-t border-border max-w-xl mx-auto"
-          >
-            {[
-              { value: "150+", label: "Projetos" },
-              { value: "50+", label: "Clientes" },
-              { value: "99%", label: "Satisfação" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-2xl md:text-3xl font-semibold text-foreground">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-muted-foreground mt-1">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
           </motion.div>
         </div>
       </motion.div>
