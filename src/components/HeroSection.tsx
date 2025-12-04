@@ -20,78 +20,78 @@ export function HeroSection() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero"
     >
       {/* Abstract Purple Light Waves Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Main wave 1 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Large wave - top left */}
         <motion.div 
-          className="absolute -top-1/4 -left-1/4 w-[800px] h-[800px] rounded-full opacity-20"
+          className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full"
           style={{
-            background: "radial-gradient(ellipse at center, hsl(270 80% 60% / 0.3) 0%, transparent 70%)",
-            filter: "blur(80px)",
+            background: "radial-gradient(circle at center, hsl(265 85% 60% / 0.25) 0%, hsl(280 80% 55% / 0.1) 40%, transparent 70%)",
+            filter: "blur(60px)",
           }}
           animate={{
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-            scale: [1, 1.1, 1],
+            x: [0, 80, 0],
+            y: [0, 40, 0],
+            scale: [1, 1.2, 1],
           }}
           transition={{
-            duration: 15,
+            duration: 20,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         />
         
-        {/* Main wave 2 */}
+        {/* Large wave - right side */}
         <motion.div 
-          className="absolute top-1/3 -right-1/4 w-[700px] h-[700px] rounded-full opacity-15"
+          className="absolute top-1/4 -right-20 w-[550px] h-[550px] rounded-full"
           style={{
-            background: "radial-gradient(ellipse at center, hsl(280 70% 55% / 0.35) 0%, transparent 65%)",
-            filter: "blur(100px)",
+            background: "radial-gradient(circle at center, hsl(275 75% 55% / 0.3) 0%, hsl(260 70% 60% / 0.12) 45%, transparent 70%)",
+            filter: "blur(70px)",
           }}
           animate={{
-            x: [0, -40, 0],
-            y: [0, 50, 0],
+            x: [0, -60, 0],
+            y: [0, 60, 0],
             scale: [1, 1.15, 1],
           }}
           transition={{
             duration: 18,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 2,
+            delay: 3,
           }}
         />
         
-        {/* Subtle wave 3 */}
+        {/* Medium wave - bottom center */}
         <motion.div 
-          className="absolute bottom-1/4 left-1/3 w-[500px] h-[500px] rounded-full opacity-10"
+          className="absolute bottom-20 left-1/4 w-[450px] h-[450px] rounded-full"
           style={{
-            background: "radial-gradient(ellipse at center, hsl(260 75% 65% / 0.25) 0%, transparent 60%)",
-            filter: "blur(60px)",
+            background: "radial-gradient(circle at center, hsl(270 80% 65% / 0.2) 0%, hsl(285 70% 55% / 0.08) 50%, transparent 70%)",
+            filter: "blur(50px)",
           }}
           animate={{
-            x: [0, 30, 0],
-            y: [0, -40, 0],
+            x: [0, 50, 0],
+            y: [0, -30, 0],
           }}
           transition={{
-            duration: 12,
+            duration: 15,
             repeat: Infinity,
             ease: "easeInOut",
             delay: 1,
           }}
         />
 
-        {/* Light streak accent */}
+        {/* Accent glow - center */}
         <motion.div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[2px] opacity-5"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px]"
           style={{
-            background: "linear-gradient(90deg, transparent 0%, hsl(270 80% 70%) 50%, transparent 100%)",
-            filter: "blur(2px)",
+            background: "radial-gradient(ellipse at center, hsl(268 80% 60% / 0.08) 0%, transparent 60%)",
+            filter: "blur(40px)",
           }}
           animate={{
-            scaleX: [0.5, 1, 0.5],
-            opacity: [0.03, 0.08, 0.03],
+            scale: [1, 1.1, 1],
+            opacity: [0.6, 1, 0.6],
           }}
           transition={{
-            duration: 8,
+            duration: 10,
             repeat: Infinity,
             ease: "easeInOut",
           }}
