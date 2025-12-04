@@ -31,8 +31,45 @@ export function ServicesSection() {
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
 
   return (
-    <section id="services" className="py-24 md:py-32 bg-background" ref={containerRef}>
-      <div className="container mx-auto px-6">
+    <section id="services" className="relative py-24 md:py-32 bg-background overflow-hidden" ref={containerRef}>
+      {/* Abstract diagonal light streaks */}
+      <div className="absolute inset-0 pointer-events-none">
+        <motion.div
+          className="absolute -top-20 right-1/4 w-[300px] h-[600px] rotate-12"
+          style={{
+            background: "linear-gradient(180deg, hsl(270 70% 60% / 0.06) 0%, transparent 100%)",
+            filter: "blur(40px)",
+          }}
+          animate={{
+            y: [0, 30, 0],
+            opacity: [0.4, 0.7, 0.4],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute top-1/3 -left-20 w-[200px] h-[400px] -rotate-12"
+          style={{
+            background: "linear-gradient(180deg, hsl(280 65% 55% / 0.05) 0%, transparent 100%)",
+            filter: "blur(50px)",
+          }}
+          animate={{
+            y: [0, -20, 0],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+        />
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
