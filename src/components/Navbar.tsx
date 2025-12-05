@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import kairusLogo from "@/assets/kairus_logo.png";
 
 const navLinks = [
   { name: "Serviços", href: "#services" },
@@ -33,9 +33,13 @@ export function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="#" className="text-xl font-semibold tracking-tight text-foreground">
-          nexus<span className="text-gradient">.</span>
+      <nav className="container mx-auto px-1 py-0 flex items-center justify-between">
+        <a href="#" className="flex items-center">
+          <img 
+            src={kairusLogo} 
+            alt="Kairus" 
+            className="h-24 w-auto"
+          />
         </a>
 
         {/* Desktop Navigation */}
@@ -44,20 +48,12 @@ export function Navbar() {
             <a
               key={link.name}
               href={link.href}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+              className="relative text-base text-muted-foreground hover:text-primary transition-colors duration-200 group"
             >
               {link.name}
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300 ease-out"></span>
             </a>
           ))}
-        </div>
-
-        <div className="hidden md:flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="text-sm">
-            Login
-          </Button>
-          <Button size="sm" className="text-sm">
-            Começar
-          </Button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -82,25 +78,18 @@ export function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden bg-background border-b border-border"
           >
-            <div className="container mx-auto px-6 py-4 flex flex-col gap-4">
+            <div className="container mx-auto px-1 py-2 flex flex-col gap-4">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+                  className="relative text-base text-muted-foreground hover:text-primary transition-colors py-2 group"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
+                  <span className="absolute bottom-2 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300 ease-out"></span>
                 </a>
               ))}
-              <div className="flex flex-col gap-2 pt-4 border-t border-border">
-                <Button variant="ghost" size="sm" className="w-full justify-start">
-                  Login
-                </Button>
-                <Button size="sm" className="w-full">
-                  Começar
-                </Button>
-              </div>
             </div>
           </motion.div>
         )}

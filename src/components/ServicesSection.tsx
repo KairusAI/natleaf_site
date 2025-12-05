@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Brain, Workflow, Smartphone, ArrowUpRight } from "lucide-react";
+import { Brain, Workflow, Smartphone } from "lucide-react";
 
 const services = [
   {
@@ -31,44 +31,7 @@ export function ServicesSection() {
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
 
   return (
-    <section id="services" className="relative py-24 md:py-32 bg-background overflow-hidden" ref={containerRef}>
-      {/* Abstract diagonal light streaks */}
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          className="absolute -top-20 right-1/4 w-[300px] h-[600px] rotate-12"
-          style={{
-            background: "linear-gradient(180deg, hsl(270 70% 60% / 0.06) 0%, transparent 100%)",
-            filter: "blur(40px)",
-          }}
-          animate={{
-            y: [0, 30, 0],
-            opacity: [0.4, 0.7, 0.4],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute top-1/3 -left-20 w-[200px] h-[400px] -rotate-12"
-          style={{
-            background: "linear-gradient(180deg, hsl(280 65% 55% / 0.05) 0%, transparent 100%)",
-            filter: "blur(50px)",
-          }}
-          animate={{
-            y: [0, -20, 0],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2,
-          }}
-        />
-      </div>
-
+    <section id="services" className="relative pt-24 md:pt-32 pb-24 md:pb-32 bg-background overflow-hidden" ref={containerRef}>
       <div className="container mx-auto px-6 relative z-10">
         {/* Header */}
         <motion.div
@@ -77,11 +40,11 @@ export function ServicesSection() {
           transition={{ duration: 0.6 }}
           className="max-w-2xl mb-16"
         >
-          <span className="text-sm font-medium text-primary tracking-wide uppercase mb-4 block">
+          <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block">
             Serviços
           </span>
           <h2 className="text-3xl md:text-4xl font-semibold text-foreground tracking-tight mb-4">
-            Soluções que transformam negócios
+            Soluções que <span className="text-gradient">transformam</span> negócios
           </h2>
           <p className="text-muted-foreground text-lg">
             Combinamos expertise técnica com visão estratégica para entregar
@@ -98,19 +61,16 @@ export function ServicesSection() {
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.15 }}
             >
-              <div className="group h-full p-8 rounded-2xl bg-secondary/50 border border-border hover:border-primary/20 hover:shadow-lg transition-all duration-300">
+              <div className="group h-full p-8 rounded-2xl bg-secondary/50 border-2 border-border hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
                 {/* Icon */}
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/15 transition-colors">
-                  <service.icon className="w-6 h-6 text-primary" />
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mb-6 group-hover:from-primary/30 group-hover:to-primary/20 transition-all duration-300">
+                  <service.icon className="w-6 h-6 text-primary group-hover:scale-110 transition-transform duration-300" />
                 </div>
 
                 {/* Title */}
-                <div className="flex items-center gap-2 mb-4">
-                  <h3 className="text-xl font-semibold text-foreground">
-                    {service.title}
-                  </h3>
-                  <ArrowUpRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
+                <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors duration-300 mb-4">
+                  {service.title}
+                </h3>
 
                 {/* Description */}
                 <p className="text-muted-foreground mb-6 leading-relaxed">
@@ -122,7 +82,7 @@ export function ServicesSection() {
                   {service.features.map((feature) => (
                     <span
                       key={feature}
-                      className="text-xs px-3 py-1 rounded-full bg-background border border-border text-muted-foreground"
+                      className="text-xs px-3 py-1 rounded-full bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 text-primary font-medium group-hover:from-primary/20 group-hover:to-primary/10 group-hover:border-primary/30 transition-all duration-300"
                     >
                       {feature}
                     </span>

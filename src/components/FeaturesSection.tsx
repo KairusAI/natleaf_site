@@ -41,43 +41,6 @@ export function FeaturesSection() {
 
   return (
     <section id="about" className="relative py-24 md:py-32 bg-secondary/30 overflow-hidden" ref={containerRef}>
-      {/* Aurora wave effect */}
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          className="absolute -bottom-20 left-0 right-0 h-[300px]"
-          style={{
-            background: "linear-gradient(90deg, transparent 0%, hsl(270 80% 60% / 0.08) 25%, hsl(280 70% 55% / 0.06) 50%, hsl(265 75% 60% / 0.08) 75%, transparent 100%)",
-            filter: "blur(60px)",
-          }}
-          animate={{
-            x: [-100, 100, -100],
-            opacity: [0.4, 0.7, 0.4],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute top-10 left-1/4 w-[500px] h-[200px]"
-          style={{
-            background: "linear-gradient(135deg, hsl(275 70% 60% / 0.05) 0%, transparent 60%)",
-            filter: "blur(50px)",
-          }}
-          animate={{
-            scale: [1, 1.1, 1],
-            x: [0, 50, 0],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 4,
-          }}
-        />
-      </div>
-
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Content */}
@@ -86,7 +49,7 @@ export function FeaturesSection() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-sm font-medium text-primary tracking-wide uppercase mb-4 block">
+            <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block">
               Por que nos escolher
             </span>
             <h2 className="text-3xl md:text-4xl font-semibold text-foreground tracking-tight mb-6">

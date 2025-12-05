@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Linkedin, Github, Twitter } from "lucide-react";
+import kairusLogo from "@/assets/kairus_logo.png";
 
 const footerLinks = {
   company: [
@@ -34,11 +35,12 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <a
-              href="#"
-              className="text-xl font-semibold tracking-tight text-foreground mb-4 block"
-            >
-              nexus<span className="text-gradient">.</span>
+            <a href="#" className="mb-4 block">
+              <img 
+                src={kairusLogo} 
+                alt="Kairus" 
+                className="h-28 w-auto"
+              />
             </a>
             <p className="text-sm text-muted-foreground mb-6 max-w-xs">
               Transformando o futuro através da tecnologia e inovação.
@@ -112,7 +114,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} nexus. Todos os direitos reservados.
+            © {new Date().getFullYear()} Kairus. Todos os direitos reservados.
           </p>
           <p className="text-sm text-muted-foreground">
             Feito com precisão no Brasil

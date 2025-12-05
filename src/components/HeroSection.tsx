@@ -1,99 +1,132 @@
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isScrolling, setIsScrolling] = useState(false);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 150]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
+  const y = useTransform(scrollYProgress, [0, 0.8, 1], [0, 80, 100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.8], [1, 0.8, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.3, 0.8], [1, 0.99, 0.97]);
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let scrollTimeout: NodeJS.Timeout;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - lastScrollY;
+      
+      // Verifica se está na HeroSection e se está rolando para baixo
+      if (containerRef.current) {
+        const heroBottom = containerRef.current.offsetTop + containerRef.current.offsetHeight;
+        const isInHero = currentScrollY < heroBottom;
+        
+        if (isInHero && scrollDelta > 0 && !isScrolling) {
+          // Detecta scroll para baixo e faz scroll automático para serviços
+          setIsScrolling(true);
+          clearTimeout(scrollTimeout);
+          
+          scrollTimeout = setTimeout(() => {
+            const servicesSection = document.getElementById("services");
+            if (servicesSection) {
+              servicesSection.scrollIntoView({ 
+                behavior: "smooth",
+                block: "start"
+              });
+              
+              // Permite scroll novamente após 1 segundo
+              setTimeout(() => {
+                setIsScrolling(false);
+              }, 1000);
+            } else {
+              setIsScrolling(false);
+            }
+          }, 100);
+        }
+      }
+      
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, [isScrolling]);
 
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
     >
-      {/* Abstract Purple Light Waves Background */}
+      {/* Abstract Blue Light Waves Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Large wave - top left */}
+        {/* Large wave - top right - animated across screen */}
         <motion.div 
-          className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full"
+          className="absolute top-[15%] right-[10%] w-[600px] h-[600px] rounded-full"
           style={{
-            background: "radial-gradient(circle at center, hsl(265 85% 60% / 0.25) 0%, hsl(280 80% 55% / 0.1) 40%, transparent 70%)",
+            background: "radial-gradient(circle at center, hsl(210 95% 60% / 0.65) 0%, hsl(210 90% 55% / 0.4) 40%, transparent 70%)",
             filter: "blur(60px)",
           }}
           animate={{
-            x: [0, 80, 0],
-            y: [0, 40, 0],
-            scale: [1, 1.2, 1],
+            x: [0, -300, 200, -150, 0],
+            y: [0, 150, -100, 200, 0],
+            scale: [1, 1.3, 0.9, 1.2, 1],
           }}
           transition={{
-            duration: 20,
+            duration: 25,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         />
         
-        {/* Large wave - right side */}
+        {/* Large wave - bottom left - animated across screen */}
         <motion.div 
-          className="absolute top-1/4 -right-20 w-[550px] h-[550px] rounded-full"
+          className="absolute bottom-[20%] left-[10%] w-[550px] h-[550px] rounded-full"
           style={{
-            background: "radial-gradient(circle at center, hsl(275 75% 55% / 0.3) 0%, hsl(260 70% 60% / 0.12) 45%, transparent 70%)",
+            background: "radial-gradient(circle at center, hsl(210 95% 55% / 0.7) 0%, hsl(210 90% 60% / 0.4) 45%, transparent 70%)",
             filter: "blur(70px)",
           }}
           animate={{
-            x: [0, -60, 0],
-            y: [0, 60, 0],
-            scale: [1, 1.15, 1],
+            x: [0, 250, -200, 300, 0],
+            y: [0, -200, 150, -100, 0],
+            scale: [1, 1.2, 0.95, 1.15, 1],
           }}
           transition={{
-            duration: 18,
+            duration: 30,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 3,
+            delay: 2,
           }}
         />
         
-        {/* Medium wave - bottom center */}
+        {/* Accent glow - center - animated across screen */}
         <motion.div 
-          className="absolute bottom-20 left-1/4 w-[450px] h-[450px] rounded-full"
+          className="absolute top-[45%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px]"
           style={{
-            background: "radial-gradient(circle at center, hsl(270 80% 65% / 0.2) 0%, hsl(285 70% 55% / 0.08) 50%, transparent 70%)",
-            filter: "blur(50px)",
-          }}
-          animate={{
-            x: [0, 50, 0],
-            y: [0, -30, 0],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        />
-
-        {/* Accent glow - center */}
-        <motion.div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px]"
-          style={{
-            background: "radial-gradient(ellipse at center, hsl(268 80% 60% / 0.08) 0%, transparent 60%)",
+            background: "radial-gradient(ellipse at center, hsl(210 95% 60% / 0.35) 0%, transparent 60%)",
             filter: "blur(40px)",
           }}
           animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.6, 1, 0.6],
+            x: [0, 200, -250, 150, -100, 0],
+            y: [0, -150, 200, -100, 180, 0],
+            scale: [1, 1.2, 0.9, 1.15, 1.05, 1],
+            opacity: [0.6, 1, 0.7, 0.9, 0.8, 0.6],
           }}
           transition={{
-            duration: 10,
+            duration: 35,
             repeat: Infinity,
             ease: "easeInOut",
+            delay: 1,
           }}
         />
       </div>

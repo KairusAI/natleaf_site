@@ -6,46 +6,10 @@ import { Button } from "@/components/ui/button";
 export function CTASection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const fullText = "Pronto para transformar tempo em oportunidade?";
 
   return (
     <section id="contact" className="relative py-24 md:py-32 bg-background overflow-hidden" ref={containerRef}>
-      {/* Subtle glow spots */}
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          className="absolute top-1/4 left-1/4 w-[250px] h-[250px] rounded-full"
-          style={{
-            background: "radial-gradient(circle, hsl(268 75% 60% / 0.1) 0%, transparent 60%)",
-            filter: "blur(45px)",
-          }}
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-1/3 w-[180px] h-[180px] rounded-full"
-          style={{
-            background: "radial-gradient(circle, hsl(280 70% 55% / 0.08) 0%, transparent 60%)",
-            filter: "blur(35px)",
-          }}
-          animate={{
-            scale: [1.1, 1, 1.1],
-            opacity: [0.4, 0.7, 0.4],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2,
-          }}
-        />
-      </div>
-
       <div className="container mx-auto px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -64,14 +28,100 @@ export function CTASection() {
             />
           </div>
 
+          {/* Animated Waves */}
+          <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
+            {/* Wave 1 - Center */}
+            <motion.div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+              style={{
+                width: "200px",
+                height: "200px",
+                background: "radial-gradient(circle, hsl(210 80% 60% / 0.3) 0%, transparent 70%)",
+                filter: "blur(20px)",
+              }}
+              animate={{
+                scale: [1, 3, 1],
+                opacity: [0.5, 0, 0.5],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeOut",
+              }}
+            />
+            
+            {/* Wave 2 - Center with delay */}
+            <motion.div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+              style={{
+                width: "200px",
+                height: "200px",
+                background: "radial-gradient(circle, hsl(210 75% 55% / 0.25) 0%, transparent 70%)",
+                filter: "blur(25px)",
+              }}
+              animate={{
+                scale: [1, 3.5, 1],
+                opacity: [0.4, 0, 0.4],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeOut",
+                delay: 1,
+              }}
+            />
+            
+            {/* Wave 3 - Top left */}
+            <motion.div
+              className="absolute top-[20%] left-[20%] rounded-full"
+              style={{
+                width: "150px",
+                height: "150px",
+                background: "radial-gradient(circle, hsl(210 85% 60% / 0.2) 0%, transparent 70%)",
+                filter: "blur(15px)",
+              }}
+              animate={{
+                scale: [1, 2.5, 1],
+                opacity: [0.3, 0, 0.3],
+              }}
+              transition={{
+                duration: 4.5,
+                repeat: Infinity,
+                ease: "easeOut",
+                delay: 0.5,
+              }}
+            />
+            
+            {/* Wave 4 - Bottom right */}
+            <motion.div
+              className="absolute bottom-[20%] right-[20%] rounded-full"
+              style={{
+                width: "150px",
+                height: "150px",
+                background: "radial-gradient(circle, hsl(210 80% 55% / 0.2) 0%, transparent 70%)",
+                filter: "blur(15px)",
+              }}
+              animate={{
+                scale: [1, 2.8, 1],
+                opacity: [0.3, 0, 0.3],
+              }}
+              transition={{
+                duration: 5.5,
+                repeat: Infinity,
+                ease: "easeOut",
+                delay: 1.5,
+              }}
+            />
+          </div>
+
           <div className="relative z-10 max-w-3xl mx-auto text-center">
             <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              initial={{ opacity: 0, filter: "blur(20px)" }}
+              animate={isInView ? { opacity: 1, filter: "blur(0px)" } : {}}
+              transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
               className="text-3xl md:text-4xl lg:text-5xl font-semibold text-primary-foreground tracking-tight mb-6"
             >
-              Pronto para transformar seu negócio?
+              {fullText}
             </motion.h2>
 
             <motion.p
@@ -100,10 +150,11 @@ export function CTASection() {
               </Button>
               <Button
                 size="lg"
-                variant="outline"
-                className="px-8 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/50"
+                variant="secondary"
+                className="group px-8 bg-primary-foreground text-primary hover:bg-primary-foreground/90"
               >
                 Fale conosco
+                <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </motion.div>
           </div>

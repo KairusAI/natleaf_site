@@ -30,61 +30,7 @@ const projects = [
 
 export const ProjectsSection = () => {
   return (
-    <section id="projetos" className="relative py-32 bg-background overflow-hidden">
-      {/* Floating orbs effect */}
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          className="absolute top-20 left-[10%] w-32 h-32 rounded-full"
-          style={{
-            background: "radial-gradient(circle, hsl(260 80% 65% / 0.12) 0%, transparent 70%)",
-            filter: "blur(25px)",
-          }}
-          animate={{
-            y: [0, -40, 0],
-            x: [0, 20, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-32 right-[15%] w-40 h-40 rounded-full"
-          style={{
-            background: "radial-gradient(circle, hsl(275 70% 55% / 0.1) 0%, transparent 70%)",
-            filter: "blur(30px)",
-          }}
-          animate={{
-            y: [0, 30, 0],
-            x: [0, -25, 0],
-          }}
-          transition={{
-            duration: 14,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 3,
-          }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full"
-          style={{
-            background: "radial-gradient(circle, hsl(265 75% 60% / 0.08) 0%, transparent 70%)",
-            filter: "blur(20px)",
-          }}
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.5, 0.8, 0.5],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        />
-      </div>
-
+    <section id="projetos" className="relative py-16 md:py-20 bg-background overflow-hidden">
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -93,7 +39,7 @@ export const ProjectsSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <span className="text-sm font-medium text-primary tracking-wider uppercase">
+          <span className="text-base font-medium text-primary tracking-wider uppercase">
             Portfólio
           </span>
           <h2 className="mt-4 text-4xl md:text-5xl font-bold text-foreground">
