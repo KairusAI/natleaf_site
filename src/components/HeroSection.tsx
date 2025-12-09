@@ -179,8 +179,26 @@ export function HeroSection() {
               Iniciar projeto
               <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Button>
-            <Button variant="outline" size="lg" className="px-8">
-              Ver portfólio
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="group px-8"
+              onClick={(e) => {
+                e.preventDefault();
+                const servicesSection = document.getElementById("services");
+                if (servicesSection) {
+                  const navbarHeight = 100;
+                  const elementPosition = servicesSection.getBoundingClientRect().top + window.pageYOffset;
+                  const offsetPosition = elementPosition - navbarHeight;
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth",
+                  });
+                }
+              }}
+            >
+              Serviços
+              <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Button>
           </motion.div>
         </div>

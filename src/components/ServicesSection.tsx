@@ -35,21 +35,36 @@ export function ServicesSection() {
       <div className="container mx-auto px-6 relative z-10">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: 50, scale: 0.95 }}
+          animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-2xl mb-16"
         >
-          <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block">
+          <motion.span
+            initial={{ opacity: 0, x: -30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-base font-medium text-primary tracking-wide uppercase mb-4 block"
+          >
             Serviços
-          </span>
-          <h2 className="text-3xl md:text-4xl font-semibold text-foreground tracking-tight mb-4">
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="text-3xl md:text-4xl font-semibold text-foreground tracking-tight mb-4"
+          >
             Soluções que <span className="text-gradient">transformam</span> negócios
-          </h2>
-          <p className="text-muted-foreground text-lg">
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="text-muted-foreground text-lg"
+          >
             Combinamos expertise técnica com visão estratégica para entregar
             resultados excepcionais.
-          </p>
+          </motion.p>
         </motion.div>
 
         {/* Services Grid */}
@@ -57,9 +72,14 @@ export function ServicesSection() {
           {services.map((service, index) => (
             <motion.div
               key={service.title}
-              initial={{ opacity: 0, y: 40 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
+              initial={{ opacity: 0, y: 60, scale: 0.9, rotateX: -15 }}
+              animate={isInView ? { opacity: 1, y: 0, scale: 1, rotateX: 0 } : {}}
+              transition={{ 
+                duration: 0.7, 
+                delay: index * 0.2,
+                ease: [0.16, 1, 0.3, 1]
+              }}
+              style={{ transformStyle: "preserve-3d" }}
             >
               <div className="group h-full p-8 rounded-2xl bg-secondary/50 border-2 border-border hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
                 {/* Icon */}

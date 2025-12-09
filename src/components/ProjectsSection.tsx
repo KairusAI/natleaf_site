@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import logoA10 from "@/assets/logo-a10.png";
 import logoVish from "@/assets/logo-vish.png";
@@ -29,35 +30,56 @@ const projects = [
 ];
 
 export const ProjectsSection = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+
   return (
-    <section id="projetos" className="relative py-16 md:py-20 bg-background overflow-hidden">
+    <section id="projects" className="relative py-16 md:py-20 bg-background overflow-hidden" ref={containerRef}>
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: 50, scale: 0.95 }}
+          animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-20"
         >
-          <span className="text-base font-medium text-primary tracking-wider uppercase">
+          <motion.span
+            initial={{ opacity: 0, x: -30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-base font-medium text-primary tracking-wider uppercase block"
+          >
             Portfólio
-          </span>
-          <h2 className="mt-4 text-4xl md:text-5xl font-bold text-foreground">
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="mt-4 text-4xl md:text-5xl font-bold text-foreground"
+          >
             Projetos em Destaque
-          </h2>
-          <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto">
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto"
+          >
             Conheça alguns dos projetos que desenvolvemos com tecnologia de ponta
-          </p>
+          </motion.p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
             <motion.div
               key={project.name}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.15 }}
+              initial={{ opacity: 0, y: 80, scale: 0.85, rotateY: -10 }}
+              animate={isInView ? { opacity: 1, y: 0, scale: 1, rotateY: 0 } : {}}
+              transition={{ 
+                duration: 0.8, 
+                delay: index * 0.2,
+                ease: [0.16, 1, 0.3, 1]
+              }}
+              style={{ transformStyle: "preserve-3d" }}
               className="group"
             >
               <div className={`relative h-full rounded-2xl border border-border/50 bg-gradient-to-br ${project.color} backdrop-blur-sm p-8 transition-all duration-500 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5`}>

@@ -12,9 +12,9 @@ export function CTASection() {
     <section id="contact" className="relative py-24 md:py-32 bg-background overflow-hidden" ref={containerRef}>
       <div className="container mx-auto px-6 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: 60, scale: 0.95 }}
+          animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="relative overflow-hidden rounded-3xl bg-gradient-accent p-12 md:p-16"
         >
           {/* Background Pattern */}
@@ -30,18 +30,18 @@ export function CTASection() {
 
           <div className="relative z-10 max-w-3xl mx-auto text-center">
             <motion.h2
-              initial={{ opacity: 0, filter: "blur(20px)" }}
-              animate={isInView ? { opacity: 1, filter: "blur(0px)" } : {}}
-              transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
+              initial={{ opacity: 0, filter: "blur(20px)", y: 30 }}
+              animate={isInView ? { opacity: 1, filter: "blur(0px)", y: 0 } : {}}
+              transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="text-3xl md:text-4xl lg:text-5xl font-semibold text-primary-foreground tracking-tight mb-6"
             >
               {fullText}
             </motion.h2>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+              transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="text-lg text-primary-foreground/80 mb-10 max-w-xl mx-auto"
             >
               Entre em contato e descubra como podemos criar soluções
@@ -49,9 +49,9 @@ export function CTASection() {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.3 }}
+              initial={{ opacity: 0, y: 30, scale: 0.9 }}
+              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+              transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
               <Button
