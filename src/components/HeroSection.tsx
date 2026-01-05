@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SplineViewer } from "@/components/SplineViewer";
 
 export function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -66,12 +67,12 @@ export function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
+      className="relative min-h-screen flex items-center justify-center overflow-visible bg-background"
     >
-      {/* Abstract Blue Light Waves Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Abstract Blue Light Waves Background - DESATIVADO TEMPORARIAMENTE */}
+      {/* <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Large wave - top right - animated across screen */}
-        <motion.div 
+        {/* <motion.div 
           className="absolute top-[15%] right-[10%] w-[600px] h-[600px] rounded-full"
           style={{
             background: "radial-gradient(circle at center, hsl(210 95% 60% / 0.65) 0%, hsl(210 90% 55% / 0.4) 40%, transparent 70%)",
@@ -87,10 +88,10 @@ export function HeroSection() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-        />
+        /> */}
         
         {/* Large wave - bottom left - animated across screen */}
-        <motion.div 
+        {/* <motion.div 
           className="absolute bottom-[20%] left-[10%] w-[550px] h-[550px] rounded-full"
           style={{
             background: "radial-gradient(circle at center, hsl(210 95% 55% / 0.7) 0%, hsl(210 90% 60% / 0.4) 45%, transparent 70%)",
@@ -107,10 +108,10 @@ export function HeroSection() {
             ease: "easeInOut",
             delay: 2,
           }}
-        />
+        /> */}
         
         {/* Accent glow - center - animated across screen */}
-        <motion.div 
+        {/* <motion.div 
           className="absolute top-[45%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px]"
           style={{
             background: "radial-gradient(ellipse at center, hsl(210 95% 60% / 0.35) 0%, transparent 60%)",
@@ -128,8 +129,8 @@ export function HeroSection() {
             ease: "easeInOut",
             delay: 1,
           }}
-        />
-      </div>
+        /> */}
+      {/* </div> */}
 
       {/* Grid Pattern */}
       <div
@@ -141,11 +142,23 @@ export function HeroSection() {
         }}
       />
 
+      {/* Spline 3D Element */}
+      <div className="absolute inset-0 z-0 flex items-center justify-center overflow-visible">
+        <SplineViewer 
+          url="https://prod.spline.design/ruAvSVYUaYnKZV8L/scene.splinecode"
+          className="w-full h-full"
+          scale={1.0} // Aumentado para ficar mais visível
+          hueRotate={0} // Rotação de cor em graus (0-360, ex: 180 = cor oposta)
+          brightness={1} // Brilho (1 = normal, 1.2 = mais claro, 0.8 = mais escuro)
+          saturation={1} // Saturação (1 = normal, 1.5 = mais colorido, 0.5 = menos colorido)
+        />
+      </div>
+
       <motion.div
         style={{ y, opacity, scale }}
-        className="container mx-auto px-6 py-32 relative z-10"
+        className="container mx-auto pl-6 pr-6 py-32 relative z-10 pointer-events-none"
       >
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-4xl text-left pointer-events-auto">
           {/* Headline */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -153,7 +166,8 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-foreground leading-[1.1] mb-6"
           >
-            Transformamos ideias em{" "}
+            Transformamos <br />
+            ideias em <br />
             <span className="text-gradient">soluções digitais</span>
           </motion.h1>
 
@@ -162,7 +176,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-10 leading-relaxed"
           >
             Desenvolvemos software inteligente com IA, automação e aplicativos
             que impulsionam o crescimento do seu negócio.
@@ -173,7 +187,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="flex flex-col sm:flex-row items-start justify-start gap-4 pointer-events-auto"
           >
             <Button size="lg" className="group px-8">
               Iniciar projeto
