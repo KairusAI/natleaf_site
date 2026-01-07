@@ -67,7 +67,7 @@ export function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-visible bg-background"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
     >
       {/* Abstract Blue Light Waves Background - DESATIVADO TEMPORARIAMENTE */}
       {/* <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -143,8 +143,8 @@ export function HeroSection() {
       />
 
       {/* Spline 3D Element */}
-      <div className="absolute inset-0 z-0 w-full h-full overflow-visible flex items-center justify-end pr-0">
-        <div className="w-full h-full max-w-[60%] -mr-8 md:-mr-16">
+      <div className="absolute inset-0 z-0 w-full h-full overflow-hidden flex items-center justify-end pr-0">
+        <div className="w-full h-full max-w-[85%] translate-x-24 md:translate-x-48">
           <SplineViewer 
             url="https://prod.spline.design/jVyIAtikjF45UXh9/scene.splinecode"
             className="w-full h-full"
