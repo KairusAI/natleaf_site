@@ -144,7 +144,7 @@ export function HeroSection() {
 
       {/* Spline 3D Element */}
       <div className="absolute inset-0 z-0 w-full h-full overflow-hidden flex items-center justify-end pr-0">
-        <div className="w-full h-full max-w-[85%] translate-x-24 md:translate-x-48">
+        <div className="w-full h-full max-w-[85%] translate-x-28 md:translate-x-56">
           <SplineViewer 
             url="https://prod.spline.design/jVyIAtikjF45UXh9/scene.splinecode"
             className="w-full h-full"
