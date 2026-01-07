@@ -143,15 +143,17 @@ export function HeroSection() {
       />
 
       {/* Spline 3D Element */}
-      <div className="absolute inset-0 z-0 flex items-center justify-center overflow-visible">
-        <SplineViewer 
-          url="https://prod.spline.design/ruAvSVYUaYnKZV8L/scene.splinecode"
-          className="w-full h-full"
-          scale={1.0} // Aumentado para ficar mais visível
-          hueRotate={0} // Rotação de cor em graus (0-360, ex: 180 = cor oposta)
-          brightness={1} // Brilho (1 = normal, 1.2 = mais claro, 0.8 = mais escuro)
-          saturation={1} // Saturação (1 = normal, 1.5 = mais colorido, 0.5 = menos colorido)
-        />
+      <div className="absolute inset-0 z-0 w-full h-full overflow-visible flex items-center justify-end pr-0">
+        <div className="w-full h-full max-w-[60%] -mr-8 md:-mr-16">
+          <SplineViewer 
+            url="https://prod.spline.design/jVyIAtikjF45UXh9/scene.splinecode"
+            className="w-full h-full"
+            scale={1.0} // Tamanho padrão
+            hueRotate={0} // Rotação de cor em graus (0-360, ex: 180 = cor oposta)
+            brightness={1} // Brilho (1 = normal, 1.2 = mais claro, 0.8 = mais escuro)
+            saturation={1} // Saturação (1 = normal, 1.5 = mais colorido, 0.5 = menos colorido)
+          />
+        </div>
       </div>
 
       <motion.div
