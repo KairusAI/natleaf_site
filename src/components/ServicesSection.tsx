@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Brain, Workflow, Smartphone } from "lucide-react";
+import { LiquidGlass } from "@/components/ui/liquid-glass";
 
 const services = [
   {
@@ -81,7 +82,7 @@ export function ServicesSection() {
               }}
               style={{ transformStyle: "preserve-3d" }}
             >
-              <div className="group h-full p-8 rounded-2xl bg-secondary/50 border-2 border-border hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
+              <LiquidGlass className="group h-full p-8 rounded-2xl hover:border-primary/50 transition-all duration-300">
                 {/* Icon */}
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mb-6 group-hover:from-primary/30 group-hover:to-primary/20 transition-all duration-300">
                   <service.icon className="w-6 h-6 text-primary group-hover:scale-110 transition-transform duration-300" />
@@ -108,7 +109,7 @@ export function ServicesSection() {
                     </span>
                   ))}
                 </div>
-              </div>
+              </LiquidGlass>
             </motion.div>
           ))}
         </div>

@@ -1,32 +1,17 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
 import logoA10 from "@/assets/logo-a10.png";
 import logoVish from "@/assets/logo-vish.png";
 import logoRae from "@/assets/logo-rae.png";
+import logoGymTrackerHub from "@/assets/LogoGymTrackerHub.svg";
+import logoNatileaf from "@/assets/NATILEAF LOGO.avif";
 
 const projects = [
-  {
-    name: "A10 Analytics",
-    logo: logoA10,
-    description: "Web App para gerenciamento de jogadores profissionais de futebol com análise de dados e métricas comparativas.",
-    tags: ["Web App", "Analytics", "Esportes"],
-    color: "from-blue-500/10 to-cyan-500/10",
-  },
-  {
-    name: "Vish",
-    logo: logoVish,
-    description: "Plataforma que usa IA aplicada para solucionar relatos urbanos através de análise de imagens.",
-    tags: ["IA", "Computer Vision", "Smart City"],
-    color: "from-orange-500/10 to-amber-500/10",
-  },
-  {
-    name: "RAE Nutrition",
-    logo: logoRae,
-    description: "Sistema de acompanhamento nutricional 100% IA que cria planos alimentares personalizados através de fotos e Q&A.",
-    tags: ["IA", "Nutrição", "Automação"],
-    color: "from-green-500/10 to-emerald-500/10",
-  },
+  { name: "A10 Analytics", logo: logoA10 },
+  { name: "Vish", logo: logoVish },
+  { name: "RAE Nutrition", logo: logoRae },
+  { name: "GymTrackerHub", logo: logoGymTrackerHub },
+  { name: "Natileaf", logo: logoNatileaf },
 ];
 
 export const ProjectsSection = () => {
@@ -34,13 +19,17 @@ export const ProjectsSection = () => {
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
 
   return (
-    <section id="projects" className="relative py-16 md:py-20 bg-background overflow-hidden" ref={containerRef}>
-      <div className="container mx-auto px-6 lg:px-8 relative z-10">
+    <section id="projects" className="relative py-24 md:py-32 bg-background overflow-hidden" ref={containerRef}>
+      {/* Background decorativo */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
+      
+      <div className="relative z-10">
+        <div className="container mx-auto px-6 lg:px-8 mb-16">
         <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.95 }}
-          animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-20"
+          className="text-center"
         >
           <motion.span
             initial={{ opacity: 0, x: -30 }}
@@ -64,61 +53,80 @@ export const ProjectsSection = () => {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto"
           >
-            Conheça alguns dos projetos que desenvolvemos com tecnologia de ponta
+            Empresas que confiam nas nossas soluções
           </motion.p>
         </motion.div>
+        </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.name}
-              initial={{ opacity: 0, y: 80, scale: 0.85, rotateY: -10 }}
-              animate={isInView ? { opacity: 1, y: 0, scale: 1, rotateY: 0 } : {}}
-              transition={{ 
-                duration: 0.8, 
-                delay: index * 0.2,
-                ease: [0.16, 1, 0.3, 1]
-              }}
-              style={{ transformStyle: "preserve-3d" }}
-              className="group"
-            >
-              <div className={`relative h-full rounded-2xl border border-border/50 bg-gradient-to-br ${project.color} backdrop-blur-sm p-8 transition-all duration-500 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5`}>
-                {/* Logo Container */}
-                <div className="flex items-center justify-center h-32 mb-8">
+        {/* Liquid Glass Container - Full Width */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={isInView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="relative overflow-hidden w-full"
+          style={{
+            background: "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)",
+            backdropFilter: "blur(24px) saturate(180%)",
+            WebkitBackdropFilter: "blur(24px) saturate(180%)",
+          }}
+        >
+
+          {/* Carrossel infinito */}
+          <div className="relative py-12">
+            <div className="flex gap-16 animate-scroll">
+              {/* Primeiro conjunto */}
+              {projects.map((project, index) => (
+                <div
+                  key={`first-${index}`}
+                  className="flex-shrink-0 w-48 h-24 flex items-center justify-center grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-500"
+                >
                   <img
                     src={project.logo}
-                    alt={`${project.name} logo`}
-                    className="max-h-24 max-w-[180px] object-contain transition-transform duration-500 group-hover:scale-110"
+                    alt={project.name}
+                    className="max-w-full max-h-full object-contain filter drop-shadow-lg"
                   />
                 </div>
-
-                {/* Content */}
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-foreground flex items-center gap-2">
-                    {project.name}
-                    <ArrowUpRight className="w-5 h-5 text-muted-foreground opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {project.description}
-                  </p>
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2 pt-4">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1 text-xs font-medium bg-background/80 text-muted-foreground rounded-full border border-border/50"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+              ))}
+              {/* Segundo conjunto para loop infinito */}
+              {projects.map((project, index) => (
+                <div
+                  key={`second-${index}`}
+                  className="flex-shrink-0 w-48 h-24 flex items-center justify-center grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-500"
+                >
+                  <img
+                    src={project.logo}
+                    alt={project.name}
+                    className="max-w-full max-h-full object-contain filter drop-shadow-lg"
+                  />
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Gradientes de fade nas bordas */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background/80 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background/80 to-transparent pointer-events-none" />
+        </motion.div>
       </div>
+
+      <style>{`
+        @keyframes scroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+
+        .animate-scroll {
+          animation: scroll 30s linear infinite;
+        }
+
+        .animate-scroll:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </section>
   );
 };

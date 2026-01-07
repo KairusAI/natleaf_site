@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Star, Quote } from "lucide-react";
+import { LiquidGlass } from "@/components/ui/liquid-glass";
 
 const testimonials = [
   {
@@ -86,7 +87,7 @@ export function TestimonialsSection() {
               }}
               style={{ transformStyle: "preserve-3d" }}
             >
-              <div className="group h-full p-8 rounded-2xl bg-background border-2 border-border hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 relative overflow-hidden">
+              <LiquidGlass className="group h-full p-8 rounded-2xl hover:border-primary/50 transition-all duration-300 relative overflow-hidden">
                 {/* Quote Icon */}
                 <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
                   <Quote className="w-16 h-16 text-primary" />
@@ -121,7 +122,7 @@ export function TestimonialsSection() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </LiquidGlass>
             </motion.div>
           ))}
         </div>

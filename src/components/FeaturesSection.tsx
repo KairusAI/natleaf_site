@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Check, Zap, Shield, Clock, Users, Code } from "lucide-react";
+import { LiquidGlass } from "@/components/ui/liquid-glass";
 
 const features = [
   {
@@ -124,8 +125,8 @@ export function FeaturesSection() {
                   delay: 0.3 + (index * 0.1),
                   ease: [0.16, 1, 0.3, 1]
                 }}
-                className="p-5 rounded-xl bg-background border border-border hover:border-primary/20 hover:shadow-md transition-all duration-300"
               >
+                <LiquidGlass className="p-5 rounded-xl hover:border-primary/20 transition-all duration-300">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                   <feature.icon className="w-5 h-5 text-primary" />
                 </div>
@@ -135,6 +136,7 @@ export function FeaturesSection() {
                 <p className="text-sm text-muted-foreground">
                   {feature.description}
                 </p>
+                </LiquidGlass>
               </motion.div>
             ))}
           </motion.div>
