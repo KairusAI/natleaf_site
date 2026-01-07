@@ -38,7 +38,7 @@ export function TestimonialsSection() {
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
 
   return (
-    <section id="testimonials" className="relative py-24 md:py-32 bg-secondary/30 overflow-hidden" ref={containerRef}>
+    <section id="testimonials" className="relative py-24 md:py-32 bg-background overflow-hidden" ref={containerRef}>
       <div className="container mx-auto px-6 relative z-10">
         {/* Header */}
         <motion.div

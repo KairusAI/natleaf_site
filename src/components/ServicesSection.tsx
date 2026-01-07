@@ -41,7 +41,8 @@ export function ServicesSection() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-2xl mb-16"
         >
-          <motion.span
+          <LiquidGlass className="p-8 rounded-2xl">
+            <motion.span
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -66,6 +67,7 @@ export function ServicesSection() {
             Combinamos expertise técnica com visão estratégica para entregar
             resultados excepcionais.
           </motion.p>
+          </LiquidGlass>
         </motion.div>
 
         {/* Services Grid */}
