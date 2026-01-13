@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { AlertCircle, Puzzle, Brain } from "lucide-react";
 import { LiquidGlass } from "@/components/ui/liquid-glass";
+import { optimizedVariants, optimizedTransitions } from "@/hooks/use-optimized-animation";
 
 const problems = [
   {
@@ -23,7 +24,8 @@ const problems = [
 
 export function ProblemSection() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  // Aumentando margem para iniciar animação mais cedo e reduzir percepção de travamento
+  const isInView = useInView(containerRef, { once: true, margin: "-50px", amount: 0.1 });
 
   return (
     <section 
@@ -35,51 +37,36 @@ export function ProblemSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
 
       <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
-        {/* Header */}
+        {/* Header - Animações simplificadas para melhor performance */}
         <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.95 }}
-          animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={optimizedTransitions.default}
           className="max-w-3xl mb-16"
         >
-          <motion.span
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-base font-medium text-primary tracking-wide uppercase mb-4 block"
-          >
+          <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block">
             O Problema
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6"
-          >
+          </span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6">
             Empresas sabem que precisam de{" "}
             <span className="text-primary">automação e IA</span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="text-muted-foreground text-lg md:text-xl"
-          >
+          </h2>
+          <p className="text-muted-foreground text-lg md:text-xl">
             O problema é quase sempre o mesmo:
-          </motion.p>
+          </p>
         </motion.div>
 
-        {/* Problems Grid */}
+        {/* Problems Grid - Animações otimizadas */}
         <div className="grid md:grid-cols-3 gap-6">
           {problems.map((problem, index) => (
             <motion.div
               key={problem.title}
-              initial={{ opacity: 0, y: 60, scale: 0.9 }}
-              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{
-                duration: 0.7,
-                delay: 0.4 + index * 0.15,
-                ease: [0.16, 1, 0.3, 1],
+                duration: 0.4,
+                delay: index * 0.08,
+                ease: [0.25, 0.1, 0.25, 1],
               }}
             >
               <LiquidGlass 

@@ -1,8 +1,8 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SplineViewer } from "@/components/SplineViewer";
+import { LazySplineViewer } from "@/components/SplineViewer";
 
 const rotatingWords = [
   "soluções digitais",
@@ -118,13 +118,14 @@ export function HeroSection() {
       {/* Spline 3D Element - Hidden on mobile for performance */}
       <div className="absolute inset-0 z-0 w-full h-full overflow-hidden hidden sm:flex items-center justify-end pr-0">
         <div className="w-full h-full max-w-[90%] sm:max-w-[85%] translate-x-16 sm:translate-x-28 md:translate-x-40 lg:translate-x-56">
-          <SplineViewer 
+          <LazySplineViewer 
             url="https://prod.spline.design/jVyIAtikjF45UXh9/scene.splinecode"
             className="w-full h-full"
-            scale={1.0} // Tamanho padrão
-            hueRotate={0} // Rotação de cor em graus (0-360, ex: 180 = cor oposta)
-            brightness={1} // Brilho (1 = normal, 1.2 = mais claro, 0.8 = mais escuro)
-            saturation={1} // Saturação (1 = normal, 1.5 = mais colorido, 0.5 = menos colorido)
+            scale={1.0}
+            hueRotate={0}
+            brightness={1}
+            saturation={1}
+            renderOnDemand={true}
           />
         </div>
       </div>
