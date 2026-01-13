@@ -42,17 +42,10 @@ export function SplineViewer({
   }, []);
 
   useEffect(() => {
-    // Esconde o "built with spline" branding
+    // Esconde o "built with spline" branding - apenas uma vez após carregar
     const hideBranding = () => {
       const splineViewer = containerRef.current?.querySelector('spline-viewer');
       if (splineViewer?.shadowRoot) {
-        // Procura por links ou elementos de branding no shadowRoot
-        const branding = splineViewer.shadowRoot.querySelector('a[href*="spline"], a[href*="Spline"], .branding, [class*="branding"]');
-        if (branding) {
-          (branding as HTMLElement).style.display = 'none';
-        }
-        
-        // Também tenta esconder qualquer elemento com texto "built with"
         const allLinks = splineViewer.shadowRoot.querySelectorAll('a');
         allLinks.forEach(link => {
           if (link.textContent?.toLowerCase().includes('built with') || 
@@ -63,19 +56,11 @@ export function SplineViewer({
       }
     };
 
-    // Tenta esconder após o elemento carregar (com múltiplas tentativas)
-    const timeout1 = setTimeout(hideBranding, 500);
-    const timeout2 = setTimeout(hideBranding, 1000);
-    const timeout3 = setTimeout(hideBranding, 2000);
-    const interval = setInterval(hideBranding, 1000);
-    
-    setTimeout(() => clearInterval(interval), 10000);
+    // Tenta esconder após o elemento carregar (tentativa única com delay maior)
+    const timeout = setTimeout(hideBranding, 2000);
 
     return () => {
-      clearTimeout(timeout1);
-      clearTimeout(timeout2);
-      clearTimeout(timeout3);
-      clearInterval(interval);
+      clearTimeout(timeout);
     };
   }, []);
 

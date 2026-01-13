@@ -44,19 +44,11 @@ export function LiquidGlass({
         }}
       />
 
-      {/* Reflexo líquido animado */}
-      <motion.div
+      {/* Reflexo líquido estático (removida animação infinita para performance) */}
+      <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(circle at 50% 0%, rgba(${glowColor}, 0.3) 0%, transparent 60%)`,
-        }}
-        animate={{
-          opacity: [0.05, 0.15, 0.05],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut",
+          background: `radial-gradient(circle at 50% 0%, rgba(${glowColor}, 0.1) 0%, transparent 60%)`,
         }}
       />
 

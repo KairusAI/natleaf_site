@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 export function CTASection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
-  const fullText = "Pronto para transformar tempo em oportunidade?";
+  const fullText = "Pronto para transformar sua operação?";
 
   return (
     <section id="contact" className="relative py-24 md:py-32 bg-background overflow-hidden" ref={containerRef}>
@@ -44,8 +44,7 @@ export function CTASection() {
               transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="text-lg text-primary-foreground/80 mb-10 max-w-xl mx-auto"
             >
-              Entre em contato e descubra como podemos criar soluções
-              personalizadas para impulsionar seu crescimento.
+              Vamos desenhar juntos uma solução inteligente para o seu negócio.
             </motion.p>
 
             <motion.div
@@ -60,14 +59,6 @@ export function CTASection() {
                 className="group px-8 bg-primary-foreground text-primary hover:bg-primary-foreground/90"
               >
                 Agendar reunião
-                <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-              <Button
-                size="lg"
-                variant="secondary"
-                className="group px-8 bg-primary-foreground text-primary hover:bg-primary-foreground/90"
-              >
-                Fale conosco
                 <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </motion.div>

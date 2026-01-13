@@ -1,8 +1,12 @@
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
+import { ProblemSection } from "@/components/ProblemSection";
+import { SolutionSection } from "@/components/SolutionSection";
 import { ServicesSection } from "@/components/ServicesSection";
+import { ProcessSection } from "@/components/ProcessSection";
+import { WhyKairusSection } from "@/components/WhyKairusSection";
+import { UseCasesSection } from "@/components/UseCasesSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
-import { FeaturesSection } from "@/components/FeaturesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { CTASection } from "@/components/CTASection";
 import { Footer } from "@/components/Footer";
@@ -13,9 +17,13 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection />
+        <ProblemSection />
+        <SolutionSection />
         <ServicesSection />
+        <ProcessSection />
+        <WhyKairusSection />
+        <UseCasesSection />
         <ProjectsSection />
-        <FeaturesSection />
         <TestimonialsSection />
         <CTASection />
       </main>

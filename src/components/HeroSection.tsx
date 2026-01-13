@@ -1,68 +1,41 @@
-import { useRef, useEffect, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SplineViewer } from "@/components/SplineViewer";
 
+const rotatingWords = [
+  "soluções digitais",
+  "experiências únicas", 
+  "resultados reais",
+  "inovação constante",
+  "sucesso garantido",
+  "produtos incríveis",
+  "impacto positivo",
+];
+
 export function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isScrolling, setIsScrolling] = useState(false);
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 0.8, 1], [0, 80, 100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.8], [1, 0.8, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.3, 0.8], [1, 0.99, 0.97]);
+  // Usando transform para animações mais suaves (GPU accelerated)
+  const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.97]);
 
+  // Rotação automática das palavras
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-    let scrollTimeout: NodeJS.Timeout;
-
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const scrollDelta = currentScrollY - lastScrollY;
-      
-      // Verifica se está na HeroSection e se está rolando para baixo
-      if (containerRef.current) {
-        const heroBottom = containerRef.current.offsetTop + containerRef.current.offsetHeight;
-        const isInHero = currentScrollY < heroBottom;
-        
-        if (isInHero && scrollDelta > 0 && !isScrolling) {
-          // Detecta scroll para baixo e faz scroll automático para serviços
-          setIsScrolling(true);
-          clearTimeout(scrollTimeout);
-          
-          scrollTimeout = setTimeout(() => {
-            const servicesSection = document.getElementById("services");
-            if (servicesSection) {
-              servicesSection.scrollIntoView({ 
-                behavior: "smooth",
-                block: "start"
-              });
-              
-              // Permite scroll novamente após 1 segundo
-              setTimeout(() => {
-                setIsScrolling(false);
-              }, 1000);
-            } else {
-              setIsScrolling(false);
-            }
-          }, 100);
-        }
-      }
-      
-      lastScrollY = currentScrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    const interval = setInterval(() => {
+      setCurrentWordIndex((prev) => (prev + 1) % rotatingWords.length);
+    }, 2500);
     
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      clearTimeout(scrollTimeout);
-    };
-  }, [isScrolling]);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section
@@ -142,9 +115,9 @@ export function HeroSection() {
         }}
       />
 
-      {/* Spline 3D Element */}
-      <div className="absolute inset-0 z-0 w-full h-full overflow-hidden flex items-center justify-end pr-0">
-        <div className="w-full h-full max-w-[85%] translate-x-28 md:translate-x-56">
+      {/* Spline 3D Element - Hidden on mobile for performance */}
+      <div className="absolute inset-0 z-0 w-full h-full overflow-hidden hidden sm:flex items-center justify-end pr-0">
+        <div className="w-full h-full max-w-[90%] sm:max-w-[85%] translate-x-16 sm:translate-x-28 md:translate-x-40 lg:translate-x-56">
           <SplineViewer 
             url="https://prod.spline.design/jVyIAtikjF45UXh9/scene.splinecode"
             className="w-full h-full"
@@ -158,19 +131,37 @@ export function HeroSection() {
 
       <motion.div
         style={{ y, opacity, scale }}
-        className="container mx-auto px-6 md:px-8 lg:px-12 py-32 relative z-10 pointer-events-none"
+        className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-20 sm:py-24 md:py-32 relative z-10 pointer-events-none"
       >
-        <div className="max-w-4xl text-left pointer-events-auto">
+        <div className="max-w-4xl text-center sm:text-left pointer-events-auto">
           {/* Headline */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-foreground leading-[1.1] mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold tracking-tight text-foreground leading-[1.15] sm:leading-[1.1] mb-4 sm:mb-6"
           >
-            Transformamos <br />
-            ideias em <br />
-            <span className="text-gradient">soluções digitais</span>
+            Transformamos{" "}
+            <br className="hidden sm:block" />
+            ideias em{" "}
+            <br className="hidden sm:block" />
+            <span className="text-primary inline-block min-w-[280px] sm:min-w-[320px] md:min-w-[400px] relative">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={currentWordIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ 
+                    duration: 0.4, 
+                    ease: "easeInOut",
+                  }}
+                  className="inline-block"
+                >
+                  {rotatingWords[currentWordIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -178,10 +169,9 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-10 leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl sm:max-w-2xl mx-auto sm:mx-0 mb-8 sm:mb-10 leading-relaxed"
           >
-            Desenvolvemos software inteligente com IA, automação e aplicativos
-            que impulsionam o crescimento do seu negócio.
+            Automação e inteligência artificial sob medida para resolver problemas reais do seu negócio, do jeito certo, pensado para o seu momento.
           </motion.p>
 
           {/* CTAs */}
@@ -189,19 +179,19 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col sm:flex-row items-start justify-start gap-4 pointer-events-auto"
+            className="flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-3 sm:gap-4 pointer-events-auto"
           >
-            <Button size="lg" className="group px-8">
-              Iniciar projeto
+            <Button size="lg" className="group px-6 sm:px-8 w-full sm:w-auto">
+              Falar com um especialista
               <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Button>
             <Button 
               variant="outline" 
               size="lg" 
-              className="group px-8"
+              className="group px-6 sm:px-8 w-full sm:w-auto"
               onClick={(e) => {
                 e.preventDefault();
-                const servicesSection = document.getElementById("services");
+                const servicesSection = document.getElementById("process");
                 if (servicesSection) {
                   const navbarHeight = 100;
                   const elementPosition = servicesSection.getBoundingClientRect().top + window.pageYOffset;
@@ -213,7 +203,7 @@ export function HeroSection() {
                 }
               }}
             >
-              Serviços
+              Ver como funciona
               <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Button>
           </motion.div>
@@ -225,7 +215,7 @@ export function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2"
       >
         <motion.div
           animate={{ y: [0, 8, 0] }}

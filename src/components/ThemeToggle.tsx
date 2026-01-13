@@ -7,8 +7,8 @@ interface ThemeToggleProps {
 }
 
 export function ThemeToggle({ className = "" }: ThemeToggleProps) {
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
+  const { toggleTheme, resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   return (
     <motion.button

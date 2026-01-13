@@ -19,7 +19,7 @@ export const ProjectsSection = () => {
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
 
   return (
-    <section id="projects" className="relative py-24 md:py-32 bg-background overflow-hidden" ref={containerRef}>
+    <section id="projects" className="relative pt-12 md:pt-16 pb-24 md:pb-32 bg-background overflow-hidden" ref={containerRef}>
       {/* Background decorativo */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
       
@@ -37,15 +37,15 @@ export const ProjectsSection = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-base font-medium text-primary tracking-wider uppercase block"
           >
-            Portfólio
+            Quem já confia na Kairus
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="mt-4 text-4xl md:text-5xl font-bold text-foreground"
+            className="mt-4 text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight"
           >
-            Projetos em Destaque
+            Empresas que <span className="text-primary">transformaram</span> seus negócios
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -53,7 +53,7 @@ export const ProjectsSection = () => {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto"
           >
-            Empresas que confiam nas nossas soluções
+            Conheça algumas das empresas que escolheram a Kairus para impulsionar seus resultados
           </motion.p>
         </motion.div>
         </div>

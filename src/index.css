@@ -116,7 +116,14 @@
   }
 }
 
+/* Performance optimizations */
 @layer utilities {
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
   .text-gradient {
     @apply bg-clip-text text-transparent;
     background-image: var(--gradient-accent);

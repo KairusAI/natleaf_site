@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import kairusLogo from "@/assets/kairus_logo.png";
@@ -16,46 +16,35 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [isHidden, setIsHidden] = useState(false);
-  const lastScrollY = useRef(0);
 
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+      if (ticking) return;
       
-      setIsScrolled(currentScrollY > 50);
-      
-      // Detecta direção do scroll para esconder/mostrar navbar
-      // Só esconde se scrollou mais de 100px e está descendo
-      if (currentScrollY > 100) {
-        if (currentScrollY > lastScrollY.current && !isMobileMenuOpen) {
-          // Scrollando para baixo - esconde
-          setIsHidden(true);
-        } else if (currentScrollY < lastScrollY.current) {
-          // Scrollando para cima - mostra
-          setIsHidden(false);
-        }
-      } else {
-        // No topo da página - sempre mostra
-        setIsHidden(false);
-      }
-      
-      lastScrollY.current = currentScrollY;
-      
-      // Calcula o progresso do scroll (0 a 100%)
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const scrollableHeight = documentHeight - windowHeight;
-      const progress = scrollableHeight > 0 ? (currentScrollY / scrollableHeight) * 100 : 0;
-      
-      setScrollProgress(Math.min(100, Math.max(0, progress)));
+      ticking = true;
+      requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+        
+        setIsScrolled(currentScrollY > 50);
+        
+        // Calcula o progresso do scroll
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const scrollableHeight = documentHeight - windowHeight;
+        const progress = scrollableHeight > 0 ? (currentScrollY / scrollableHeight) * 100 : 0;
+        
+        setScrollProgress(Math.min(100, Math.max(0, progress)));
+        ticking = false;
+      });
     };
     
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Calcula progresso inicial
+    handleScroll();
     
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isMobileMenuOpen]);
+  }, []);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href.startsWith("#")) {
@@ -88,68 +77,97 @@ export function Navbar() {
         />
       </div>
 
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: isHidden ? "-100%" : 0 }}
-        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-background/80 backdrop-blur-lg border-b border-border"
-            : "bg-transparent"
-        }`}
-      >
-
-      <nav className="container mx-auto px-6 md:px-8 lg:px-12 py-0 flex items-center justify-between">
-        <a href="#" className="flex items-center">
-          <img 
-            src={kairusLogo} 
-            alt="Kairus" 
-            className="h-24 w-auto"
-          />
-        </a>
-
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              className="relative text-base text-muted-foreground hover:text-primary transition-colors duration-200 group cursor-pointer"
-            >
-              {link.name}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300 ease-out"></span>
+      {/* Header Container - Centraliza quando scrollado */}
+      <div className={`fixed top-0 left-0 right-0 z-50 flex transition-all duration-500 ${
+        isScrolled ? "justify-center pt-3" : "justify-start"
+      }`}>
+        <motion.header
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+          className={`transition-all duration-500 ${
+            isScrolled
+              ? "bg-background/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/5 rounded-full px-6"
+              : "bg-transparent w-full"
+          }`}
+          style={isScrolled ? {
+            background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)",
+            backdropFilter: "blur(20px) saturate(180%)",
+            WebkitBackdropFilter: "blur(20px) saturate(180%)",
+          } : {}}
+        >
+          <nav className={`flex items-center transition-all duration-500 ${
+            isScrolled 
+              ? "px-2 py-2 gap-6" 
+              : "container mx-auto px-6 md:px-8 lg:px-12 py-0 justify-between"
+          }`}>
+            <a href="#" className="flex items-center">
+              <img 
+                src={kairusLogo} 
+                alt="Kairus" 
+                className={`w-auto transition-all duration-500 ${
+                  isScrolled ? "h-12" : "h-24"
+                }`}
+              />
             </a>
-          ))}
-          <ThemeToggle />
-        </div>
 
-        {/* Mobile Theme Toggle & Menu Button */}
-        <div className="md:hidden flex items-center gap-2">
-          <ThemeToggle />
-          <button
-            className="p-2"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-5 h-5 text-foreground" />
-            ) : (
-              <Menu className="w-5 h-5 text-foreground" />
-            )}
-          </button>
-        </div>
-      </nav>
+            {/* Desktop Navigation */}
+            <div className={`hidden md:flex items-center transition-all duration-500 ${
+              isScrolled ? "gap-4" : "gap-8"
+            }`}>
+              {navLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  className={`relative text-muted-foreground hover:text-primary transition-colors duration-200 group cursor-pointer ${
+                    isScrolled ? "text-sm" : "text-base"
+                  }`}
+                >
+                  {link.name}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300 ease-out"></span>
+                </a>
+              ))}
+              <ThemeToggle />
+            </div>
+
+            {/* Mobile Theme Toggle & Menu Button */}
+            <div className="md:hidden flex items-center gap-2">
+              <ThemeToggle />
+              <button
+                className="p-2"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                {isMobileMenuOpen ? (
+                  <X className="w-5 h-5 text-foreground" />
+                ) : (
+                  <Menu className="w-5 h-5 text-foreground" />
+                )}
+              </button>
+            </div>
+          </nav>
+        </motion.header>
+      </div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background border-b border-border"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className={`fixed z-40 md:hidden transition-all duration-500 ${
+              isScrolled 
+                ? "top-20 left-1/2 -translate-x-1/2 rounded-2xl border border-white/20 shadow-lg"
+                : "top-24 left-0 right-0 border-b border-border"
+            }`}
+            style={{
+              background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)",
+              backdropFilter: "blur(20px) saturate(180%)",
+              WebkitBackdropFilter: "blur(20px) saturate(180%)",
+            }}
           >
-            <div className="container mx-auto px-6 md:px-8 lg:px-12 py-2 flex flex-col gap-4">
+            <div className="px-6 py-4 flex flex-col gap-4">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
@@ -165,7 +183,6 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
     </>
   );
 }
