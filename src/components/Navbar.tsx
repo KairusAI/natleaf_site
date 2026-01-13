@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import kairusLogo from "@/assets/kairus_logo.png";
@@ -16,17 +16,37 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isHidden, setIsHidden] = useState(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      const currentScrollY = window.scrollY;
+      
+      setIsScrolled(currentScrollY > 50);
+      
+      // Detecta direção do scroll para esconder/mostrar navbar
+      // Só esconde se scrollou mais de 100px e está descendo
+      if (currentScrollY > 100) {
+        if (currentScrollY > lastScrollY.current && !isMobileMenuOpen) {
+          // Scrollando para baixo - esconde
+          setIsHidden(true);
+        } else if (currentScrollY < lastScrollY.current) {
+          // Scrollando para cima - mostra
+          setIsHidden(false);
+        }
+      } else {
+        // No topo da página - sempre mostra
+        setIsHidden(false);
+      }
+      
+      lastScrollY.current = currentScrollY;
       
       // Calcula o progresso do scroll (0 a 100%)
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY;
       const scrollableHeight = documentHeight - windowHeight;
-      const progress = scrollableHeight > 0 ? (scrollTop / scrollableHeight) * 100 : 0;
+      const progress = scrollableHeight > 0 ? (currentScrollY / scrollableHeight) * 100 : 0;
       
       setScrollProgress(Math.min(100, Math.max(0, progress)));
     };
@@ -35,7 +55,7 @@ export function Navbar() {
     handleScroll(); // Calcula progresso inicial
     
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isMobileMenuOpen]);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href.startsWith("#")) {
@@ -56,18 +76,9 @@ export function Navbar() {
   };
 
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-background/80 backdrop-blur-lg border-b border-border"
-          : "bg-transparent"
-      }`}
-    >
-      {/* Scroll Progress Indicator */}
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-border/30 overflow-hidden">
+    <>
+      {/* Scroll Progress Indicator - Sempre visível */}
+      <div className="fixed top-0 left-0 right-0 h-0.5 bg-border/30 overflow-hidden z-[60]">
         <motion.div
           className="h-full bg-gradient-to-r from-primary via-primary to-primary"
           style={{
@@ -76,6 +87,17 @@ export function Navbar() {
           transition={{ duration: 0.1, ease: "linear" }}
         />
       </div>
+
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: isHidden ? "-100%" : 0 }}
+        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled
+            ? "bg-background/80 backdrop-blur-lg border-b border-border"
+            : "bg-transparent"
+        }`}
+      >
 
       <nav className="container mx-auto px-6 md:px-8 lg:px-12 py-0 flex items-center justify-between">
         <a href="#" className="flex items-center">
@@ -144,5 +166,6 @@ export function Navbar() {
         )}
       </AnimatePresence>
     </motion.header>
+    </>
   );
 }
