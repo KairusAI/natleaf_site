@@ -42,7 +42,7 @@ export function FeaturesSection() {
 
   return (
     <section id="about" className="relative py-24 md:py-32 bg-secondary/30 overflow-hidden" ref={containerRef}>
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Content */}
           <motion.div

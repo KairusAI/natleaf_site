@@ -158,7 +158,7 @@ export function HeroSection() {
 
       <motion.div
         style={{ y, opacity, scale }}
-        className="container mx-auto pl-6 pr-6 py-32 relative z-10 pointer-events-none"
+        className="container mx-auto px-6 md:px-8 lg:px-12 py-32 relative z-10 pointer-events-none"
       >
         <div className="max-w-4xl text-left pointer-events-auto">
           {/* Headline */}

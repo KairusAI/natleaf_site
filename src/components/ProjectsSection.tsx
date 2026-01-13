@@ -24,7 +24,7 @@ export const ProjectsSection = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
       
       <div className="relative z-10">
-        <div className="container mx-auto px-6 lg:px-8 mb-16">
+        <div className="container mx-auto px-6 md:px-8 lg:px-12 mb-16">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -121,10 +121,6 @@ export const ProjectsSection = () => {
 
         .animate-scroll {
           animation: scroll 30s linear infinite;
-        }
-
-        .animate-scroll:hover {
-          animation-play-state: paused;
         }
       `}</style>
     </section>

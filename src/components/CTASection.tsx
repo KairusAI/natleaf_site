@@ -10,7 +10,7 @@ export function CTASection() {
 
   return (
     <section id="contact" className="relative py-24 md:py-32 bg-background overflow-hidden" ref={containerRef}>
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 60, scale: 0.95 }}
           animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
