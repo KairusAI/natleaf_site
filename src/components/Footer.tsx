@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Linkedin, Github, Twitter } from "lucide-react";
+import { Linkedin, Github, Instagram } from "lucide-react";
 import kairusLogo from "@/assets/LogoKairusVector.svg";
 import kairusLogoDark from "@/assets/LogoKairusVectorDark.svg";
 import { useTheme } from "@/hooks/use-theme";
@@ -15,7 +15,7 @@ const footerLinks = {
     { name: "Inteligência Artificial", href: "#services" },
     { name: "Automação", href: "#services" },
     { name: "Desenvolvimento", href: "#services" },
-    { name: "Consultoria", href: "#" },
+    { name: "Consultoria", href: "#services" },
   ],
   legal: [
     { name: "Privacidade", href: "#" },
@@ -27,18 +27,47 @@ const footerLinks = {
 const socialLinks = [
   { icon: Linkedin, href: "#", label: "LinkedIn" },
   { icon: Github, href: "#", label: "GitHub" },
-  { icon: Twitter, href: "#", label: "Twitter" },
+  { icon: Instagram, href: "#", label: "Instagram" },
 ];
 
 export function Footer() {
   const { resolvedTheme } = useTheme();
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut" as const,
+      },
+    },
+  };
+
   return (
-    <footer className="py-16 bg-secondary/30 border-t border-border">
+    <motion.footer 
+      className="py-16 bg-secondary/30 border-t border-border"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.1 }}
+      variants={containerVariants}
+    >
       <div className="container mx-auto px-6 md:px-8 lg:px-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
+          <motion.div className="col-span-2 md:col-span-1" variants={itemVariants}>
             <a href="#" className="mb-4 block">
               <img 
                 src={resolvedTheme === "dark" ? kairusLogoDark : kairusLogo} 
@@ -50,21 +79,27 @@ export function Footer() {
               Transformando o futuro através da tecnologia e inovação.
             </p>
             <div className="flex gap-3">
-              {socialLinks.map((social) => (
-                <a
+              {socialLinks.map((social, index) => (
+                <motion.a
                   key={social.label}
                   href={social.href}
                   className="w-9 h-9 rounded-lg bg-background border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
                   aria-label={social.label}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4 + index * 0.1, duration: 0.3 }}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <social.icon className="w-4 h-4" />
-                </a>
+                </motion.a>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Company */}
-          <div>
+          <motion.div variants={itemVariants}>
             <h4 className="text-sm font-medium text-foreground mb-4">Empresa</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
@@ -78,10 +113,10 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Services */}
-          <div>
+          <motion.div variants={itemVariants}>
             <h4 className="text-sm font-medium text-foreground mb-4">Serviços</h4>
             <ul className="space-y-3">
               {footerLinks.services.map((link) => (
@@ -95,10 +130,10 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Legal */}
-          <div>
+          <motion.div variants={itemVariants}>
             <h4 className="text-sm font-medium text-foreground mb-4">Legal</h4>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
@@ -112,19 +147,25 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
         </div>
 
         {/* Bottom */}
-        <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
+        <motion.div 
+          className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Kairus. Todos os direitos reservados.
           </p>
           <p className="text-sm text-muted-foreground">
             Feito com precisão no Brasil
           </p>
-        </div>
+        </motion.div>
       </div>
-    </footer>
+    </motion.footer>
   );
 }

@@ -18,6 +18,7 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeSection, setActiveSection] = useState<string>("");
   const { resolvedTheme } = useTheme();
 
   useEffect(() => {
@@ -47,6 +48,36 @@ export function Navbar() {
     handleScroll();
     
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Detecta a seção ativa usando Intersection Observer
+  useEffect(() => {
+    const sectionIds = navLinks.map(link => link.href.replace("#", ""));
+    
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -60% 0px", // Considera ativa quando está no topo da viewport
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(`#${entry.target.id}`);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    sectionIds.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) {
+        observer.observe(element);
+      }
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -118,19 +149,26 @@ export function Navbar() {
             <div className={`hidden md:flex items-center transition-all duration-500 ${
               isScrolled ? "gap-4" : "gap-8"
             }`}>
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className={`relative text-muted-foreground hover:text-primary transition-colors duration-200 group cursor-pointer ${
-                    isScrolled ? "text-sm" : "text-base"
-                  }`}
-                >
-                  {link.name}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300 ease-out"></span>
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = activeSection === link.href;
+                return (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className={`relative transition-colors duration-200 group cursor-pointer ${
+                      isScrolled ? "text-sm" : "text-base"
+                    } ${
+                      isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
+                    }`}
+                  >
+                    {link.name}
+                    <span className={`absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300 ease-out ${
+                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                    }`}></span>
+                  </a>
+                );
+              })}
               <ThemeToggle />
             </div>
 
@@ -171,17 +209,24 @@ export function Navbar() {
             }}
           >
             <div className="px-6 py-4 flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className="relative text-base text-muted-foreground hover:text-primary transition-colors py-2 group cursor-pointer"
-                >
-                  {link.name}
-                  <span className="absolute bottom-2 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300 ease-out"></span>
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = activeSection === link.href;
+                return (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className={`relative text-base transition-colors py-2 group cursor-pointer ${
+                      isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
+                    }`}
+                  >
+                    {link.name}
+                    <span className={`absolute bottom-2 left-0 h-0.5 bg-primary transition-all duration-300 ease-out ${
+                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                    }`}></span>
+                  </a>
+                );
+              })}
             </div>
           </motion.div>
         )}
