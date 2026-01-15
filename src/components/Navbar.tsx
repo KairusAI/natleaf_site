@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import kairusLogo from "@/assets/kairus_logo.png";
+import kairusLogo from "@/assets/LogoKairusVector.svg";
+import kairusLogoDark from "@/assets/LogoKairusVectorDark.svg";
 import { ThemeToggle } from "./ThemeToggle";
+import { useTheme } from "@/hooks/use-theme";
 
 const navLinks = [
   { name: "Serviços", href: "#services" },
@@ -16,6 +18,7 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     let ticking = false;
@@ -103,7 +106,7 @@ export function Navbar() {
           }`}>
             <a href="#" className="flex items-center">
               <img 
-                src={kairusLogo} 
+                src={resolvedTheme === "dark" ? kairusLogoDark : kairusLogo} 
                 alt="Kairus" 
                 className={`w-auto transition-all duration-500 ${
                   isScrolled ? "h-12" : "h-24"

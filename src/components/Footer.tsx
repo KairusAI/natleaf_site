@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { Linkedin, Github, Twitter } from "lucide-react";
-import kairusLogo from "@/assets/kairus_logo.png";
+import kairusLogo from "@/assets/LogoKairusVector.svg";
+import kairusLogoDark from "@/assets/LogoKairusVectorDark.svg";
+import { useTheme } from "@/hooks/use-theme";
 
 const footerLinks = {
   company: [
@@ -29,6 +31,8 @@ const socialLinks = [
 ];
 
 export function Footer() {
+  const { resolvedTheme } = useTheme();
+
   return (
     <footer className="py-16 bg-secondary/30 border-t border-border">
       <div className="container mx-auto px-6 md:px-8 lg:px-12">
@@ -37,7 +41,7 @@ export function Footer() {
           <div className="col-span-2 md:col-span-1">
             <a href="#" className="mb-4 block">
               <img 
-                src={kairusLogo} 
+                src={resolvedTheme === "dark" ? kairusLogoDark : kairusLogo} 
                 alt="Kairus" 
                 className="h-28 w-auto"
               />
