@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Menu, X } from "lucide-react";
+import gsap from "gsap";
 import kairusLogo from "@/assets/LogoKairusVector.svg";
 import kairusLogoDark from "@/assets/LogoKairusVectorDark.svg";
 import { ThemeToggle } from "./ThemeToggle";
@@ -20,6 +20,73 @@ export function Navbar() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSection, setActiveSection] = useState<string>("");
   const { resolvedTheme } = useTheme();
+  
+  const headerRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const navLinksRef = useRef<(HTMLAnchorElement | null)[]>([]);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // GSAP entrance animation
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Header entrance
+      gsap.fromTo(headerRef.current,
+        { y: -100, opacity: 0 },
+        { 
+          y: 0, 
+          opacity: 1, 
+          duration: 0.8, 
+          ease: "power3.out",
+          delay: 0.2
+        }
+      );
+
+      // Nav links stagger entrance
+      gsap.fromTo(navLinksRef.current,
+        { y: -20, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.1,
+          ease: "power2.out",
+          delay: 0.5
+        }
+      );
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  // Mobile menu animation
+  useLayoutEffect(() => {
+    if (!mobileMenuRef.current) return;
+    
+    if (isMobileMenuOpen) {
+      gsap.fromTo(mobileMenuRef.current,
+        { opacity: 0, y: -20 },
+        { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
+      );
+      
+      // Animate links inside
+      const links = mobileMenuRef.current.querySelectorAll('a');
+      gsap.fromTo(links,
+        { x: -20, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.3, stagger: 0.05, ease: "power2.out", delay: 0.1 }
+      );
+    }
+  }, [isMobileMenuOpen]);
+
+  // Progress bar animation with GSAP
+  useEffect(() => {
+    if (progressRef.current) {
+      gsap.to(progressRef.current, {
+        width: `${scrollProgress}%`,
+        duration: 0.1,
+        ease: "none"
+      });
+    }
+  }, [scrollProgress]);
 
   useEffect(() => {
     let ticking = false;
@@ -102,12 +169,10 @@ export function Navbar() {
     <>
       {/* Scroll Progress Indicator - Sempre visível */}
       <div className="fixed top-0 left-0 right-0 h-0.5 bg-border/30 overflow-hidden z-[60]">
-        <motion.div
+        <div
+          ref={progressRef}
           className="h-full bg-gradient-to-r from-primary via-primary to-primary"
-          style={{
-            width: `${scrollProgress}%`,
-          }}
-          transition={{ duration: 0.1, ease: "linear" }}
+          style={{ width: 0 }}
         />
       </div>
 
@@ -115,10 +180,8 @@ export function Navbar() {
       <div className={`fixed top-0 left-0 right-0 z-50 flex transition-all duration-500 ${
         isScrolled ? "justify-center pt-3" : "justify-start"
       }`}>
-        <motion.header
-          initial={{ y: -100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+        <header
+          ref={headerRef}
           className={`transition-all duration-500 ${
             isScrolled
               ? "bg-background/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/5 rounded-full px-6"
@@ -149,18 +212,33 @@ export function Navbar() {
             <div className={`hidden md:flex items-center transition-all duration-500 ${
               isScrolled ? "gap-4" : "gap-8"
             }`}>
-              {navLinks.map((link) => {
+              {navLinks.map((link, index) => {
                 const isActive = activeSection === link.href;
                 return (
                   <a
                     key={link.name}
+                    ref={(el) => { navLinksRef.current[index] = el; }}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className={`relative transition-colors duration-200 group cursor-pointer ${
+                    className={`relative transition-colors duration-200 group cursor-pointer cursor-hover ${
                       isScrolled ? "text-sm" : "text-base"
                     } ${
                       isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
                     }`}
+                    onMouseEnter={(e) => {
+                      gsap.to(e.currentTarget, {
+                        y: -2,
+                        duration: 0.2,
+                        ease: "power2.out"
+                      });
+                    }}
+                    onMouseLeave={(e) => {
+                      gsap.to(e.currentTarget, {
+                        y: 0,
+                        duration: 0.2,
+                        ease: "power2.out"
+                      });
+                    }}
                   >
                     {link.name}
                     <span className={`absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300 ease-out ${
@@ -187,50 +265,47 @@ export function Navbar() {
               </button>
             </div>
           </nav>
-        </motion.header>
+        </header>
       </div>
 
       {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className={`fixed z-40 md:hidden transition-all duration-500 ${
-              isScrolled 
-                ? "top-20 left-1/2 -translate-x-1/2 rounded-2xl border border-white/20 shadow-lg"
-                : "top-24 left-0 right-0 border-b border-border"
-            }`}
-            style={{
-              background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)",
-              backdropFilter: "blur(20px) saturate(180%)",
-              WebkitBackdropFilter: "blur(20px) saturate(180%)",
-            }}
-          >
-            <div className="px-6 py-4 flex flex-col gap-4">
-              {navLinks.map((link) => {
-                const isActive = activeSection === link.href;
-                return (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    onClick={(e) => handleNavClick(e, link.href)}
-                    className={`relative text-base transition-colors py-2 group cursor-pointer ${
-                      isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
-                    }`}
-                  >
-                    {link.name}
-                    <span className={`absolute bottom-2 left-0 h-0.5 bg-primary transition-all duration-300 ease-out ${
-                      isActive ? "w-full" : "w-0 group-hover:w-full"
-                    }`}></span>
-                  </a>
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {isMobileMenuOpen && (
+        <div
+          ref={mobileMenuRef}
+          className={`fixed z-40 md:hidden transition-all duration-500 ${
+            isScrolled 
+              ? "top-20 left-1/2 -translate-x-1/2 rounded-2xl border border-white/20 shadow-lg"
+              : "top-24 left-0 right-0 border-b border-border"
+          }`}
+          style={{
+            background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)",
+            backdropFilter: "blur(20px) saturate(180%)",
+            WebkitBackdropFilter: "blur(20px) saturate(180%)",
+            opacity: 0
+          }}
+        >
+          <div className="px-6 py-4 flex flex-col gap-4">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href;
+              return (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  className={`relative text-base transition-colors py-2 group cursor-pointer ${
+                    isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
+                  }`}
+                >
+                  {link.name}
+                  <span className={`absolute bottom-2 left-0 h-0.5 bg-primary transition-all duration-300 ease-out ${
+                    isActive ? "w-full" : "w-0 group-hover:w-full"
+                  }`}></span>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </>
   );
 }

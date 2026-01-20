@@ -1,8 +1,10 @@
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useLayoutEffect } from "react";
 import { Sparkles, Target, Cog } from "lucide-react";
 import { LiquidGlass } from "@/components/ui/liquid-glass";
-import { optimizedTransitions } from "@/hooks/use-optimized-animation";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const benefits = [
   {
@@ -24,8 +26,106 @@ const benefits = [
 
 export function SolutionSection() {
   const containerRef = useRef<HTMLDivElement>(null);
-  // Aumentando margem para iniciar animação mais cedo
-  const isInView = useInView(containerRef, { once: true, margin: "-50px", amount: 0.1 });
+  const contentRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Content animation (lado esquerdo)
+      if (contentRef.current) {
+        const elements = contentRef.current.children;
+        gsap.fromTo(elements,
+          { 
+            x: -80, 
+            opacity: 0,
+          },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.9,
+            stagger: 0.12,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: contentRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reset",
+            },
+          }
+        );
+      }
+
+      // Cards animation (lado direito) com efeito cascata
+      if (cardsRef.current) {
+        const cards = cardsRef.current.children;
+        
+        gsap.fromTo(cards,
+          { 
+            x: 80, 
+            opacity: 0,
+            scale: 0.95,
+          },
+          {
+            x: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.7,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: cardsRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reset",
+            },
+          }
+        );
+
+        // Hover effects
+        Array.from(cards).forEach((card) => {
+          const iconContainer = card.querySelector('.solution-icon');
+          
+          card.addEventListener('mouseenter', () => {
+            gsap.to(card, {
+              x: 10,
+              scale: 1.02,
+              duration: 0.4,
+              ease: "power2.out",
+            });
+            
+            if (iconContainer) {
+              gsap.to(iconContainer, {
+                scale: 1.15,
+                rotate: 360,
+                duration: 0.6,
+                ease: "back.out(2)",
+              });
+            }
+          });
+
+          card.addEventListener('mouseleave', () => {
+            gsap.to(card, {
+              x: 0,
+              scale: 1,
+              duration: 0.4,
+              ease: "power2.out",
+            });
+            
+            if (iconContainer) {
+              gsap.to(iconContainer, {
+                scale: 1,
+                rotate: 0,
+                duration: 0.4,
+                ease: "power2.out",
+              });
+            }
+          });
+        });
+      }
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section 
@@ -38,20 +138,16 @@ export function SolutionSection() {
 
       <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Content - Animações simplificadas */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={optimizedTransitions.default}
-          >
-            <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block">
+          {/* Content */}
+          <div ref={contentRef}>
+            <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block opacity-0">
               A Solução
             </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 opacity-0">
               IA personalizada, construída para o{" "}
               <span className="text-primary">seu fluxo real</span>
             </h2>
-            <div className="space-y-4 text-muted-foreground text-lg">
+            <div className="space-y-4 text-muted-foreground text-lg opacity-0">
               <p>
                 Na Kairus, <strong className="text-foreground">não vendemos ferramentas prontas</strong>.
               </p>
@@ -63,26 +159,20 @@ export function SolutionSection() {
                 Cada projeto é único. Cada automação tem um propósito claro.
               </p>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Benefits Cards - Animações otimizadas */}
-          <div className="space-y-4">
-            {benefits.map((benefit, index) => (
-              <motion.div
+          {/* Benefits Cards */}
+          <div ref={cardsRef} className="space-y-4">
+            {benefits.map((benefit) => (
+              <div
                 key={benefit.title}
-                initial={{ opacity: 0, x: 20 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{
-                  duration: 0.4,
-                  delay: 0.1 + index * 0.08,
-                  ease: [0.25, 0.1, 0.25, 1],
-                }}
+                className="opacity-0"
               >
-                <LiquidGlass className="group p-6 rounded-2xl hover:border-primary/50 transition-all duration-300">
+                <LiquidGlass className="group p-6 rounded-2xl hover:border-primary/50 transition-colors duration-300 cursor-pointer">
                   <div className="flex items-start gap-4">
                     {/* Icon */}
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center flex-shrink-0 group-hover:from-primary/30 group-hover:to-primary/20 transition-all duration-300">
-                      <benefit.icon className="w-6 h-6 text-primary group-hover:scale-110 transition-transform duration-300" />
+                    <div className="solution-icon w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300">
+                      <benefit.icon className="w-6 h-6 text-primary" />
                     </div>
 
                     {/* Content */}
@@ -96,7 +186,7 @@ export function SolutionSection() {
                     </div>
                   </div>
                 </LiquidGlass>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

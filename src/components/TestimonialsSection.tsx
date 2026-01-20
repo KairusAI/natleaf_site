@@ -1,7 +1,10 @@
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useLayoutEffect } from "react";
 import { Star, Quote } from "lucide-react";
 import { LiquidGlass } from "@/components/ui/liquid-glass";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const testimonials = [
   {
@@ -35,61 +38,181 @@ const testimonials = [
 
 export function TestimonialsSection() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Header animation com split effect
+      if (headerRef.current) {
+        const elements = headerRef.current.children;
+        gsap.fromTo(elements,
+          { 
+            y: 50, 
+            opacity: 0,
+            scale: 0.95,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            stagger: 0.12,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reset",
+            },
+          }
+        );
+      }
+
+      // Cards animation com efeito 3D
+      if (cardsRef.current) {
+        const cards = cardsRef.current.children;
+        
+        gsap.fromTo(cards,
+          { 
+            y: 100, 
+            opacity: 0,
+            rotateX: -30,
+            scale: 0.9,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            rotateX: 0,
+            scale: 1,
+            duration: 1,
+            stagger: 0.2,
+            ease: "power4.out",
+            scrollTrigger: {
+              trigger: cardsRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reset",
+            },
+          }
+        );
+
+        // Stars animation dentro de cada card
+        Array.from(cards).forEach((card, i) => {
+          const stars = card.querySelectorAll('.star-icon');
+          gsap.fromTo(stars,
+            { scale: 0, rotate: -180 },
+            {
+              scale: 1,
+              rotate: 0,
+              duration: 0.4,
+              stagger: 0.08,
+              ease: "back.out(3)",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 80%",
+                toggleActions: "play none none reset",
+              },
+              delay: 0.3 + (i * 0.2),
+            }
+          );
+
+          // Quote icon animation
+          const quoteIcon = card.querySelector('.quote-icon');
+          if (quoteIcon) {
+            gsap.fromTo(quoteIcon,
+              { scale: 0, opacity: 0, rotate: -45 },
+              {
+                scale: 1,
+                opacity: 0.1,
+                rotate: 0,
+                duration: 0.6,
+                ease: "back.out(2)",
+                scrollTrigger: {
+                  trigger: card,
+                  start: "top 80%",
+                  toggleActions: "play none none reset",
+                },
+                delay: 0.5 + (i * 0.2),
+              }
+            );
+          }
+
+          // Hover effects
+          card.addEventListener('mouseenter', () => {
+            gsap.to(card, {
+              y: -15,
+              scale: 1.02,
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)",
+              duration: 0.4,
+              ease: "power2.out",
+            });
+            if (quoteIcon) {
+              gsap.to(quoteIcon, {
+                opacity: 0.2,
+                scale: 1.1,
+                duration: 0.4,
+              });
+            }
+          });
+
+          card.addEventListener('mouseleave', () => {
+            gsap.to(card, {
+              y: 0,
+              scale: 1,
+              boxShadow: "none",
+              duration: 0.4,
+              ease: "power2.out",
+            });
+            if (quoteIcon) {
+              gsap.to(quoteIcon, {
+                opacity: 0.1,
+                scale: 1,
+                duration: 0.4,
+              });
+            }
+          });
+        });
+      }
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section id="testimonials" className="relative py-24 md:py-32 bg-background overflow-hidden" ref={containerRef}>
       <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.95 }}
-          animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        <div
+          ref={headerRef}
           className="text-center mb-16"
         >
-          <motion.span
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-base font-medium text-primary tracking-wide uppercase block mb-4"
-          >
+          <span className="text-base font-medium text-primary tracking-wide uppercase block mb-4 opacity-0">
             Depoimentos
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-3xl md:text-4xl font-semibold text-foreground tracking-tight mb-4"
-          >
+          </span>
+          <h2 className="text-3xl md:text-4xl font-semibold text-foreground tracking-tight mb-4 opacity-0">
             O que nossos <span className="text-gradient">clientes</span> dizem
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="text-muted-foreground text-lg max-w-2xl mx-auto"
-          >
+          </h2>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto opacity-0">
             Conheça a experiência de quem confia na Kairus para transformar seus negócios
-          </motion.p>
-        </motion.div>
+          </p>
+        </div>
 
         {/* Testimonials Grid */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
+        <div 
+          ref={cardsRef} 
+          className="grid md:grid-cols-3 gap-6"
+          style={{ perspective: "1000px" }}
+        >
+          {testimonials.map((testimonial) => (
+            <div
               key={testimonial.name}
-              initial={{ opacity: 0, y: 60, scale: 0.9, rotateX: -15 }}
-              animate={isInView ? { opacity: 1, y: 0, scale: 1, rotateX: 0 } : {}}
-              transition={{
-                duration: 0.7,
-                delay: index * 0.2,
-                ease: [0.16, 1, 0.3, 1],
-              }}
+              className="opacity-0"
               style={{ transformStyle: "preserve-3d" }}
             >
-              <LiquidGlass className="group h-full p-8 rounded-2xl hover:border-primary/50 transition-all duration-300 relative overflow-hidden">
+              <LiquidGlass className="group h-full p-8 rounded-2xl hover:border-primary/50 transition-colors duration-300 relative overflow-hidden cursor-pointer">
                 {/* Quote Icon */}
-                <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
+                <div className="quote-icon absolute top-6 right-6 opacity-0">
                   <Quote className="w-16 h-16 text-primary" />
                 </div>
 
@@ -98,7 +221,7 @@ export function TestimonialsSection() {
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star
                       key={i}
-                      className="w-4 h-4 fill-primary text-primary"
+                      className="star-icon w-4 h-4 fill-primary text-primary"
                     />
                   ))}
                 </div>
@@ -110,7 +233,7 @@ export function TestimonialsSection() {
 
                 {/* Author */}
                 <div className="flex items-center gap-4 relative z-10">
-                  <div className="w-12 h-12 rounded-full bg-gradient-accent flex items-center justify-center text-primary-foreground font-semibold text-sm">
+                  <div className="w-12 h-12 rounded-full bg-gradient-accent flex items-center justify-center text-primary-foreground font-semibold text-sm group-hover:scale-110 transition-transform duration-300">
                     {testimonial.avatar}
                   </div>
                   <div>
@@ -123,7 +246,7 @@ export function TestimonialsSection() {
                   </div>
                 </div>
               </LiquidGlass>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

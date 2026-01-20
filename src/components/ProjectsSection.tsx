@@ -1,10 +1,13 @@
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useLayoutEffect, useEffect } from "react";
 import logoA10 from "@/assets/logo-a10.png";
 import logoVish from "@/assets/logo-vish.png";
 import logoRae from "@/assets/logo-rae.png";
 import logoGymTrackerHub from "@/assets/LogoGymTrackerHub.svg";
 import logoNatileaf from "@/assets/NATILEAF LOGO.avif";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
   { name: "A10 Analytics", logo: logoA10 },
@@ -16,7 +19,86 @@ const projects = [
 
 export const ProjectsSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const headerRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Header animation
+      if (headerRef.current) {
+        const elements = headerRef.current.children;
+        gsap.fromTo(elements,
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.12,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reset",
+            },
+          }
+        );
+      }
+
+      // Carousel container reveal
+      if (carouselRef.current) {
+        gsap.fromTo(carouselRef.current,
+          { 
+            opacity: 0, 
+            scaleX: 0.9,
+            clipPath: "inset(0 50% 0 50%)",
+          },
+          {
+            opacity: 1,
+            scaleX: 1,
+            clipPath: "inset(0 0% 0 0%)",
+            duration: 1.2,
+            ease: "power4.out",
+            scrollTrigger: {
+              trigger: carouselRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reset",
+            },
+          }
+        );
+      }
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // GSAP infinite scroll animation
+  useEffect(() => {
+    if (!trackRef.current) return;
+
+    const track = trackRef.current;
+    const items = track.children;
+    const totalWidth = Array.from(items).slice(0, projects.length).reduce(
+      (acc, item) => acc + (item as HTMLElement).offsetWidth + 64, 0
+    );
+
+    // Create the infinite scroll animation - never pauses
+    const tween = gsap.to(track, {
+      x: -totalWidth,
+      duration: 25,
+      ease: "none",
+      repeat: -1,
+      modifiers: {
+        x: gsap.utils.unitize(x => parseFloat(x) % totalWidth)
+      }
+    });
+
+    return () => {
+      tween.kill();
+    };
+  }, []);
 
   return (
     <section id="projects" className="relative pt-12 md:pt-16 pb-24 md:pb-32 bg-background overflow-hidden" ref={containerRef}>
@@ -25,78 +107,48 @@ export const ProjectsSection = () => {
       
       <div className="relative z-10">
         <div className="container mx-auto px-6 md:px-8 lg:px-12 mb-16">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center"
-        >
-          <motion.span
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-base font-medium text-primary tracking-wider uppercase block"
+          <div
+            ref={headerRef}
+            className="text-center"
           >
-            Quem já confia na Kairus
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="mt-4 text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight"
-          >
-            Empresas que <span className="text-primary">transformaram</span> seus negócios
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto"
-          >
-            Conheça algumas das empresas que escolheram a Kairus para impulsionar seus resultados
-          </motion.p>
-        </motion.div>
+            <span className="text-base font-medium text-primary tracking-wider uppercase block opacity-0">
+              Quem já confia na Kairus
+            </span>
+            <h2 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight opacity-0">
+              Empresas que <span className="text-primary">transformaram</span> seus negócios
+            </h2>
+            <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto opacity-0">
+              Conheça algumas das empresas que escolheram a Kairus para impulsionar seus resultados
+            </p>
+          </div>
         </div>
 
-        {/* Liquid Glass Container - Full Width */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="relative overflow-hidden w-full"
+        {/* Carousel Container */}
+        <div
+          ref={carouselRef}
+          className="relative overflow-hidden w-full opacity-0"
           style={{
             background: "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)",
             backdropFilter: "blur(24px) saturate(180%)",
             WebkitBackdropFilter: "blur(24px) saturate(180%)",
           }}
         >
-
-          {/* Carrossel infinito */}
+          {/* Carrossel GSAP */}
           <div className="relative py-12">
-            <div className="flex gap-16 animate-scroll">
-              {/* Primeiro conjunto */}
-              {projects.map((project, index) => (
+            <div 
+              ref={trackRef}
+              className="flex gap-16"
+            >
+              {/* Duplicate items for seamless loop */}
+              {[...projects, ...projects, ...projects].map((project, index) => (
                 <div
-                  key={`first-${index}`}
-                  className="flex-shrink-0 w-48 h-24 flex items-center justify-center grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-500"
+                  key={`logo-${index}`}
+                  className="flex-shrink-0 w-48 h-24 flex items-center justify-center grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-500 cursor-pointer group"
                 >
                   <img
                     src={project.logo}
                     alt={project.name}
-                    className="max-w-full max-h-full object-contain filter drop-shadow-lg"
-                  />
-                </div>
-              ))}
-              {/* Segundo conjunto para loop infinito */}
-              {projects.map((project, index) => (
-                <div
-                  key={`second-${index}`}
-                  className="flex-shrink-0 w-48 h-24 flex items-center justify-center grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-500"
-                >
-                  <img
-                    src={project.logo}
-                    alt={project.name}
-                    className="max-w-full max-h-full object-contain filter drop-shadow-lg"
+                    className="max-w-full max-h-full object-contain filter drop-shadow-lg group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>
               ))}
@@ -104,25 +156,10 @@ export const ProjectsSection = () => {
           </div>
 
           {/* Gradientes de fade nas bordas */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background/80 to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background/80 to-transparent pointer-events-none" />
-        </motion.div>
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background/90 to-transparent pointer-events-none z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background/90 to-transparent pointer-events-none z-10" />
+        </div>
       </div>
-
-      <style>{`
-        @keyframes scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-
-        .animate-scroll {
-          animation: scroll 30s linear infinite;
-        }
-      `}</style>
     </section>
   );
 };

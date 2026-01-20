@@ -1,8 +1,10 @@
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useLayoutEffect } from "react";
 import { AlertCircle, Puzzle, Brain } from "lucide-react";
 import { LiquidGlass } from "@/components/ui/liquid-glass";
-import { optimizedVariants, optimizedTransitions } from "@/hooks/use-optimized-animation";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const problems = [
   {
@@ -24,8 +26,99 @@ const problems = [
 
 export function ProblemSection() {
   const containerRef = useRef<HTMLDivElement>(null);
-  // Aumentando margem para iniciar animação mais cedo e reduzir percepção de travamento
-  const isInView = useInView(containerRef, { once: true, margin: "-50px", amount: 0.1 });
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Header animation com texto revelando da esquerda
+      if (headerRef.current) {
+        const elements = headerRef.current.children;
+        gsap.fromTo(elements,
+          { 
+            x: -60, 
+            opacity: 0,
+            clipPath: "inset(0 100% 0 0)",
+          },
+          {
+            x: 0,
+            opacity: 1,
+            clipPath: "inset(0 0% 0 0)",
+            duration: 0.9,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reset",
+            },
+          }
+        );
+      }
+
+      // Cards animation com shake sutil para indicar "problema"
+      if (cardsRef.current) {
+        const cards = cardsRef.current.children;
+        
+        gsap.fromTo(cards,
+          { 
+            y: 60, 
+            opacity: 0,
+            scale: 0.9,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.7,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: cardsRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reset",
+            },
+          }
+        );
+
+        // Hover effects
+        Array.from(cards).forEach((card) => {
+          const iconContainer = card.querySelector('.problem-icon');
+          
+          card.addEventListener('mouseenter', () => {
+            gsap.to(card, {
+              y: -8,
+              scale: 1.02,
+              duration: 0.4,
+              ease: "power2.out",
+            });
+            
+            // Shake do ícone no hover
+            if (iconContainer) {
+              gsap.to(iconContainer, {
+                rotate: [0, -5, 5, -5, 5, 0],
+                duration: 0.5,
+                ease: "power2.out",
+              });
+            }
+          });
+
+          card.addEventListener('mouseleave', () => {
+            gsap.to(card, {
+              y: 0,
+              scale: 1,
+              duration: 0.4,
+              ease: "power2.out",
+            });
+          });
+        });
+      }
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section 
@@ -37,44 +130,36 @@ export function ProblemSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
 
       <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
-        {/* Header - Animações simplificadas para melhor performance */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={optimizedTransitions.default}
+        {/* Header */}
+        <div
+          ref={headerRef}
           className="max-w-3xl mb-16"
         >
-          <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block">
+          <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block opacity-0">
             O Problema
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 opacity-0">
             Empresas sabem que precisam de{" "}
             <span className="text-primary">automação e IA</span>
           </h2>
-          <p className="text-muted-foreground text-lg md:text-xl">
+          <p className="text-muted-foreground text-lg md:text-xl opacity-0">
             O problema é quase sempre o mesmo:
           </p>
-        </motion.div>
+        </div>
 
-        {/* Problems Grid - Animações otimizadas */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {problems.map((problem, index) => (
-            <motion.div
+        {/* Problems Grid */}
+        <div ref={cardsRef} className="grid md:grid-cols-3 gap-6">
+          {problems.map((problem) => (
+            <div
               key={problem.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                duration: 0.4,
-                delay: index * 0.08,
-                ease: [0.25, 0.1, 0.25, 1],
-              }}
+              className="opacity-0"
             >
               <LiquidGlass 
-                className="group h-full p-8 rounded-2xl hover:border-primary/50 transition-all duration-300"
+                className="group h-full p-8 rounded-2xl hover:border-primary/50 transition-colors duration-300 cursor-pointer"
               >
                 {/* Icon */}
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mb-6 group-hover:from-primary/30 group-hover:to-primary/20 transition-all duration-300">
-                  <problem.icon className="w-6 h-6 text-primary group-hover:scale-110 transition-transform duration-300" />
+                <div className="problem-icon w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mb-6 transition-all duration-300">
+                  <problem.icon className="w-6 h-6 text-primary" />
                 </div>
 
                 {/* Title */}
@@ -87,7 +172,7 @@ export function ProblemSection() {
                   {problem.description}
                 </p>
               </LiquidGlass>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
