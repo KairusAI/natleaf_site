@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Menu, X } from "lucide-react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import kairusLogo from "@/assets/LogoKairusVector.svg";
 import kairusLogoDark from "@/assets/LogoKairusVectorDark.svg";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTheme } from "@/hooks/use-theme";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const navLinks = [
   { name: "Serviços", href: "#services" },
@@ -160,6 +163,11 @@ export function Navbar() {
           top: offsetPosition,
           behavior: "smooth",
         });
+
+        // Refresh ScrollTrigger after scroll animation
+        setTimeout(() => {
+          ScrollTrigger.refresh();
+        }, 1000);
       }
     }
     setIsMobileMenuOpen(false);

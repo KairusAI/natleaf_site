@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useCallback } from "react";
 import { TrendingUp, Clock, Users, RefreshCw, CheckCircle2 } from "lucide-react";
 import { LiquidGlass } from "@/components/ui/liquid-glass";
 import gsap from "gsap";
@@ -38,10 +38,10 @@ export function UseCasesSection() {
       if (headerRef.current) {
         const elements = headerRef.current.children;
         gsap.fromTo(elements,
-          { y: 50, opacity: 0, scale: 0.95 },
+          { y: 50, autoAlpha: 0, scale: 0.95 },
           {
             y: 0,
-            opacity: 1,
+            autoAlpha: 1,
             scale: 1,
             duration: 0.8,
             stagger: 0.12,
@@ -49,7 +49,7 @@ export function UseCasesSection() {
             scrollTrigger: {
               trigger: headerRef.current,
               start: "top 85%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -62,13 +62,13 @@ export function UseCasesSection() {
         gsap.fromTo(cards,
           { 
             y: 80, 
-            opacity: 0,
+            autoAlpha: 0,
             scale: 0.85,
             rotateX: -30,
           },
           {
             y: 0,
-            opacity: 1,
+            autoAlpha: 1,
             scale: 1,
             rotateX: 0,
             duration: 0.8,
@@ -77,7 +77,7 @@ export function UseCasesSection() {
             scrollTrigger: {
               trigger: gridRef.current,
               start: "top 80%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -95,73 +95,76 @@ export function UseCasesSection() {
             scrollTrigger: {
               trigger: gridRef.current,
               start: "top 75%",
-              toggleActions: "play none none reset",
+              once: true,
             },
             delay: 0.5,
           }
         );
-
-        // Hover effects
-        Array.from(cards).forEach((card) => {
-          const iconContainer = card.querySelector('.usecase-icon');
-          const checkIcon = card.querySelector('.check-icon');
-          
-          card.addEventListener('mouseenter', () => {
-            gsap.to(card, {
-              y: -10,
-              scale: 1.05,
-              duration: 0.4,
-              ease: "power2.out",
-            });
-            
-            if (iconContainer) {
-              gsap.to(iconContainer, {
-                scale: 1.2,
-                rotate: 10,
-                duration: 0.4,
-                ease: "back.out(2)",
-              });
-            }
-            
-            if (checkIcon) {
-              gsap.to(checkIcon, {
-                scale: 1.3,
-                color: "hsl(var(--primary))",
-                duration: 0.3,
-              });
-            }
-          });
-
-          card.addEventListener('mouseleave', () => {
-            gsap.to(card, {
-              y: 0,
-              scale: 1,
-              duration: 0.4,
-              ease: "power2.out",
-            });
-            
-            if (iconContainer) {
-              gsap.to(iconContainer, {
-                scale: 1,
-                rotate: 0,
-                duration: 0.4,
-                ease: "power2.out",
-              });
-            }
-            
-            if (checkIcon) {
-              gsap.to(checkIcon, {
-                scale: 1,
-                color: "hsl(var(--primary) / 0.5)",
-                duration: 0.3,
-              });
-            }
-          });
-        });
       }
     }, containerRef);
 
     return () => ctx.revert();
+  }, []);
+
+  // Hover handlers - separate from GSAP context for proper cleanup
+  const handleCardEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const iconContainer = card.querySelector('.usecase-icon');
+    const checkIcon = card.querySelector('.check-icon');
+    
+    gsap.to(card, {
+      y: -10,
+      scale: 1.05,
+      duration: 0.4,
+      ease: "power2.out",
+    });
+    
+    if (iconContainer) {
+      gsap.to(iconContainer, {
+        scale: 1.2,
+        rotate: 10,
+        duration: 0.4,
+        ease: "back.out(2)",
+      });
+    }
+    
+    if (checkIcon) {
+      gsap.to(checkIcon, {
+        scale: 1.3,
+        color: "hsl(var(--primary))",
+        duration: 0.3,
+      });
+    }
+  }, []);
+
+  const handleCardLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const iconContainer = card.querySelector('.usecase-icon');
+    const checkIcon = card.querySelector('.check-icon');
+    
+    gsap.to(card, {
+      y: 0,
+      scale: 1,
+      duration: 0.4,
+      ease: "power2.out",
+    });
+    
+    if (iconContainer) {
+      gsap.to(iconContainer, {
+        scale: 1,
+        rotate: 0,
+        duration: 0.4,
+        ease: "power2.out",
+      });
+    }
+    
+    if (checkIcon) {
+      gsap.to(checkIcon, {
+        scale: 1,
+        color: "hsl(var(--primary) / 0.5)",
+        duration: 0.3,
+      });
+    }
   }, []);
 
   return (
@@ -176,10 +179,10 @@ export function UseCasesSection() {
           ref={headerRef}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block opacity-0">
+          <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block gsap-hidden">
             Para quem é
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 opacity-0">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 gsap-hidden">
             Se encaixa no seu <span className="text-primary">cenário</span>?
           </h2>
         </div>
@@ -193,8 +196,10 @@ export function UseCasesSection() {
           {useCases.map((useCase) => (
             <div
               key={useCase.title}
-              className="opacity-0"
+              className="gsap-hidden"
               style={{ transformStyle: "preserve-3d" }}
+              onMouseEnter={handleCardEnter}
+              onMouseLeave={handleCardLeave}
             >
               <LiquidGlass className="group h-full p-6 rounded-2xl hover:border-primary/50 transition-colors duration-300 text-center cursor-pointer">
                 {/* Icon */}

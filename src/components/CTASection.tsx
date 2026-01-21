@@ -1,10 +1,13 @@
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useCallback, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Store original title text to prevent innerHTML corruption
+const ORIGINAL_TITLE = "Pronto para transformar sua operação?";
 
 export function CTASection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -13,6 +16,7 @@ export function CTASection() {
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
   const patternRef = useRef<HTMLDivElement>(null);
+  const hasAnimatedRef = useRef(false);
 
   useLayoutEffect(() => {
     if (!containerRef.current) return;
@@ -23,13 +27,13 @@ export function CTASection() {
         gsap.fromTo(cardRef.current,
           { 
             y: 80, 
-            opacity: 0, 
+            autoAlpha: 0, 
             scale: 0.9,
             rotateX: 10,
           },
           {
             y: 0,
-            opacity: 1,
+            autoAlpha: 1,
             scale: 1,
             rotateX: 0,
             duration: 1,
@@ -37,7 +41,7 @@ export function CTASection() {
             scrollTrigger: {
               trigger: containerRef.current,
               start: "top 80%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -55,7 +59,7 @@ export function CTASection() {
             scrollTrigger: {
               trigger: cardRef.current,
               start: "top 80%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -69,10 +73,10 @@ export function CTASection() {
         });
       }
 
-      // Title word-by-word animation
-      if (titleRef.current) {
-        const text = titleRef.current.innerText;
-        const words = text.split(' ');
+      // Title word-by-word animation - use stored original text
+      if (titleRef.current && !hasAnimatedRef.current) {
+        hasAnimatedRef.current = true;
+        const words = ORIGINAL_TITLE.split(' ');
         titleRef.current.innerHTML = words
           .map(word => `<span class="inline-block overflow-hidden"><span class="cta-word inline-block">${word}</span></span>`)
           .join(' ');
@@ -94,7 +98,7 @@ export function CTASection() {
             scrollTrigger: {
               trigger: titleRef.current,
               start: "top 85%",
-              toggleActions: "play none none reset",
+              once: true,
             },
             delay: 0.3,
           }
@@ -106,19 +110,19 @@ export function CTASection() {
         gsap.fromTo(subtitleRef.current,
           { 
             y: 30, 
-            opacity: 0,
+            autoAlpha: 0,
             clipPath: "inset(0 0 100% 0)",
           },
           {
             y: 0,
-            opacity: 1,
+            autoAlpha: 1,
             clipPath: "inset(0 0 0% 0)",
             duration: 0.8,
             ease: "power3.out",
             scrollTrigger: {
               trigger: subtitleRef.current,
               start: "top 90%",
-              toggleActions: "play none none reset",
+              once: true,
             },
             delay: 0.6,
           }
@@ -131,78 +135,79 @@ export function CTASection() {
         gsap.fromTo(button,
           { 
             y: 40, 
-            opacity: 0,
+            autoAlpha: 0,
             scale: 0.8,
           },
           {
             y: 0,
-            opacity: 1,
+            autoAlpha: 1,
             scale: 1,
             duration: 0.6,
             ease: "back.out(2)",
             scrollTrigger: {
               trigger: buttonRef.current,
               start: "top 90%",
-              toggleActions: "play none none reset",
+              once: true,
             },
             delay: 0.8,
           }
         );
-
-        // Button hover magnetic effect
-        if (button) {
-          button.addEventListener('mouseenter', () => {
-            gsap.to(button, {
-              scale: 1.05,
-              duration: 0.3,
-              ease: "power2.out",
-            });
-          });
-
-          button.addEventListener('mouseleave', () => {
-            gsap.to(button, {
-              scale: 1,
-              x: 0,
-              y: 0,
-              duration: 0.5,
-              ease: "elastic.out(1, 0.5)",
-            });
-          });
-
-          button.addEventListener('mousemove', (e: MouseEvent) => {
-            const rect = button.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            
-            gsap.to(button, {
-              x: x * 0.15,
-              y: y * 0.15,
-              duration: 0.3,
-              ease: "power2.out",
-            });
-          });
-        }
-      }
-
-      // Card hover glow effect
-      if (cardRef.current) {
-        cardRef.current.addEventListener('mouseenter', () => {
-          gsap.to(cardRef.current, {
-            boxShadow: "0 0 60px 10px rgba(59, 130, 246, 0.2)",
-            duration: 0.4,
-          });
-        });
-
-        cardRef.current.addEventListener('mouseleave', () => {
-          gsap.to(cardRef.current, {
-            boxShadow: "none",
-            duration: 0.4,
-          });
-        });
       }
     }, containerRef);
 
     return () => ctx.revert();
+  }, []);
+
+  // Button hover handlers - separate from GSAP context for proper cleanup
+  const handleButtonEnter = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    gsap.to(e.currentTarget, {
+      scale: 1.05,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  }, []);
+
+  const handleButtonLeave = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    gsap.to(e.currentTarget, {
+      scale: 1,
+      x: 0,
+      y: 0,
+      duration: 0.5,
+      ease: "elastic.out(1, 0.5)",
+    });
+  }, []);
+
+  const handleButtonMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const button = e.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    
+    gsap.to(button, {
+      x: x * 0.15,
+      y: y * 0.15,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  }, []);
+
+  // Card hover handlers
+  const handleCardEnter = useCallback(() => {
+    if (cardRef.current) {
+      gsap.to(cardRef.current, {
+        boxShadow: "0 0 60px 10px rgba(59, 130, 246, 0.2)",
+        duration: 0.4,
+      });
+    }
+  }, []);
+
+  const handleCardLeave = useCallback(() => {
+    if (cardRef.current) {
+      gsap.to(cardRef.current, {
+        boxShadow: "none",
+        duration: 0.4,
+      });
+    }
   }, []);
 
   return (
@@ -210,8 +215,10 @@ export function CTASection() {
       <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
         <div
           ref={cardRef}
-          className="relative overflow-hidden rounded-3xl bg-gradient-accent p-12 md:p-16 opacity-0"
+          className="relative overflow-hidden rounded-3xl bg-gradient-accent p-12 md:p-16 gsap-hidden"
           style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
+          onMouseEnter={handleCardEnter}
+          onMouseLeave={handleCardLeave}
         >
           {/* Background Pattern */}
           <div 
@@ -246,7 +253,7 @@ export function CTASection() {
 
             <p
               ref={subtitleRef}
-              className="text-lg text-primary-foreground/80 mb-10 max-w-xl mx-auto opacity-0"
+              className="text-lg text-primary-foreground/80 mb-10 max-w-xl mx-auto gsap-hidden"
             >
               Vamos desenhar juntos uma solução inteligente para o seu negócio.
             </p>
@@ -255,7 +262,11 @@ export function CTASection() {
               <Button
                 size="lg"
                 variant="secondary"
-                className="group px-8 bg-primary-foreground text-primary hover:bg-primary-foreground/90 opacity-0"
+                className="group px-8 bg-primary-foreground text-primary hover:bg-primary-foreground/90 gsap-hidden"
+                onMouseEnter={handleButtonEnter}
+                onMouseLeave={handleButtonLeave}
+                onMouseMove={handleButtonMove}
+                onClick={() => window.open('https://wa.me/5521971201512?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20uma%20reuni%C3%A3o.', '_blank')}
               >
                 Agendar reunião
                 <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-2 duration-300" />

@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useCallback } from "react";
 import { Linkedin, Github, Instagram } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -47,18 +47,18 @@ export function Footer() {
       gsap.fromTo(columnsRef.current,
         { 
           y: 50, 
-          opacity: 0 
+          autoAlpha: 0 
         },
         {
           y: 0,
-          opacity: 1,
+          autoAlpha: 1,
           duration: 0.6,
           stagger: 0.15,
           ease: "power2.out",
           scrollTrigger: {
             trigger: footerRef.current,
             start: "top 90%",
-            toggleActions: "play none none reset",
+            once: true,
           }
         }
       );
@@ -68,19 +68,19 @@ export function Footer() {
         { 
           scale: 0,
           rotation: -180,
-          opacity: 0 
+          autoAlpha: 0 
         },
         {
           scale: 1,
           rotation: 0,
-          opacity: 1,
+          autoAlpha: 1,
           duration: 0.5,
           stagger: 0.1,
           ease: "back.out(1.7)",
           scrollTrigger: {
             trigger: footerRef.current,
             start: "top 85%",
-            toggleActions: "play none none reset",
+            once: true,
           },
           delay: 0.3
         }
@@ -89,48 +89,44 @@ export function Footer() {
       // Bottom line reveal
       gsap.fromTo(bottomRef.current,
         { 
-          opacity: 0,
+          autoAlpha: 0,
           y: 20
         },
         {
-          opacity: 1,
+          autoAlpha: 1,
           y: 0,
           duration: 0.5,
           ease: "power2.out",
           scrollTrigger: {
             trigger: footerRef.current,
             start: "top 80%",
-            toggleActions: "play none none reset",
+            once: true,
           },
           delay: 0.5
         }
       );
-
-      // Social hover effect listeners
-      socialRef.current.forEach((el) => {
-        if (!el) return;
-        
-        el.addEventListener("mouseenter", () => {
-          gsap.to(el, {
-            scale: 1.2,
-            y: -3,
-            duration: 0.3,
-            ease: "power2.out"
-          });
-        });
-        
-        el.addEventListener("mouseleave", () => {
-          gsap.to(el, {
-            scale: 1,
-            y: 0,
-            duration: 0.3,
-            ease: "power2.out"
-          });
-        });
-      });
     }, footerRef);
 
     return () => ctx.revert();
+  }, []);
+
+  // Social icon hover handlers - separate from GSAP context for proper cleanup
+  const handleSocialEnter = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    gsap.to(e.currentTarget, {
+      scale: 1.2,
+      y: -3,
+      duration: 0.3,
+      ease: "power2.out"
+    });
+  }, []);
+
+  const handleSocialLeave = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    gsap.to(e.currentTarget, {
+      scale: 1,
+      y: 0,
+      duration: 0.3,
+      ease: "power2.out"
+    });
   }, []);
 
   return (
@@ -163,6 +159,8 @@ export function Footer() {
                   href={social.href}
                   className="w-9 h-9 rounded-lg bg-background border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors cursor-hover"
                   aria-label={social.label}
+                  onMouseEnter={handleSocialEnter}
+                  onMouseLeave={handleSocialLeave}
                 >
                   <social.icon className="w-4 h-4" />
                 </a>

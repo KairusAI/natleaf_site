@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useCallback } from "react";
 import { Star, Quote } from "lucide-react";
 import { LiquidGlass } from "@/components/ui/liquid-glass";
 import gsap from "gsap";
@@ -51,12 +51,12 @@ export function TestimonialsSection() {
         gsap.fromTo(elements,
           { 
             y: 50, 
-            opacity: 0,
+            autoAlpha: 0,
             scale: 0.95,
           },
           {
             y: 0,
-            opacity: 1,
+            autoAlpha: 1,
             scale: 1,
             duration: 0.8,
             stagger: 0.12,
@@ -64,7 +64,7 @@ export function TestimonialsSection() {
             scrollTrigger: {
               trigger: headerRef.current,
               start: "top 85%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -77,13 +77,13 @@ export function TestimonialsSection() {
         gsap.fromTo(cards,
           { 
             y: 100, 
-            opacity: 0,
+            autoAlpha: 0,
             rotateX: -30,
             scale: 0.9,
           },
           {
             y: 0,
-            opacity: 1,
+            autoAlpha: 1,
             rotateX: 0,
             scale: 1,
             duration: 1,
@@ -92,7 +92,7 @@ export function TestimonialsSection() {
             scrollTrigger: {
               trigger: cardsRef.current,
               start: "top 80%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -111,7 +111,7 @@ export function TestimonialsSection() {
               scrollTrigger: {
                 trigger: card,
                 start: "top 80%",
-                toggleActions: "play none none reset",
+                once: true,
               },
               delay: 0.3 + (i * 0.2),
             }
@@ -131,52 +131,60 @@ export function TestimonialsSection() {
                 scrollTrigger: {
                   trigger: card,
                   start: "top 80%",
-                  toggleActions: "play none none reset",
+                  once: true,
                 },
                 delay: 0.5 + (i * 0.2),
               }
             );
           }
-
-          // Hover effects
-          card.addEventListener('mouseenter', () => {
-            gsap.to(card, {
-              y: -15,
-              scale: 1.02,
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)",
-              duration: 0.4,
-              ease: "power2.out",
-            });
-            if (quoteIcon) {
-              gsap.to(quoteIcon, {
-                opacity: 0.2,
-                scale: 1.1,
-                duration: 0.4,
-              });
-            }
-          });
-
-          card.addEventListener('mouseleave', () => {
-            gsap.to(card, {
-              y: 0,
-              scale: 1,
-              boxShadow: "none",
-              duration: 0.4,
-              ease: "power2.out",
-            });
-            if (quoteIcon) {
-              gsap.to(quoteIcon, {
-                opacity: 0.1,
-                scale: 1,
-                duration: 0.4,
-              });
-            }
-          });
         });
       }
     }, containerRef);
 
     return () => ctx.revert();
+  }, []);
+
+  // Hover handlers - separate from GSAP context for proper cleanup
+  const handleCardEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const quoteIcon = card.querySelector('.quote-icon');
+    
+    gsap.to(card, {
+      y: -15,
+      scale: 1.02,
+      boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)",
+      duration: 0.4,
+      ease: "power2.out",
+    });
+    
+    if (quoteIcon) {
+      gsap.to(quoteIcon, {
+        opacity: 0.2,
+        scale: 1.1,
+        duration: 0.4,
+      });
+    }
+  }, []);
+
+  const handleCardLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const quoteIcon = card.querySelector('.quote-icon');
+    
+    gsap.to(card, {
+      y: 0,
+      scale: 1,
+      boxShadow: "none",
+      duration: 0.4,
+      ease: "power2.out",
+    });
+    
+    if (quoteIcon) {
+      gsap.to(quoteIcon, {
+        opacity: 0.1,
+        scale: 1,
+        duration: 0.4,
+      });
+    }
   }, []);
 
   return (
@@ -187,13 +195,13 @@ export function TestimonialsSection() {
           ref={headerRef}
           className="text-center mb-16"
         >
-          <span className="text-base font-medium text-primary tracking-wide uppercase block mb-4 opacity-0">
+          <span className="text-base font-medium text-primary tracking-wide uppercase block mb-4 gsap-hidden">
             Depoimentos
           </span>
-          <h2 className="text-3xl md:text-4xl font-semibold text-foreground tracking-tight mb-4 opacity-0">
+          <h2 className="text-3xl md:text-4xl font-semibold text-foreground tracking-tight mb-4 gsap-hidden">
             O que nossos <span className="text-gradient">clientes</span> dizem
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto opacity-0">
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto gsap-hidden">
             Conheça a experiência de quem confia na Kairus para transformar seus negócios
           </p>
         </div>
@@ -207,8 +215,10 @@ export function TestimonialsSection() {
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.name}
-              className="opacity-0"
+              className="gsap-hidden"
               style={{ transformStyle: "preserve-3d" }}
+              onMouseEnter={handleCardEnter}
+              onMouseLeave={handleCardLeave}
             >
               <LiquidGlass className="group h-full p-8 rounded-2xl hover:border-primary/50 transition-colors duration-300 relative overflow-hidden cursor-pointer">
                 {/* Quote Icon */}

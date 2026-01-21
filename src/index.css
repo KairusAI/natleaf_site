@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 
+ * GSAP Animation Initial States
+ * Hide elements before JS loads to prevent FOUC (Flash of Unstyled Content)
+ * GSAP will use autoAlpha to reveal them during animation
+ */
+.gsap-hidden {
+  visibility: hidden;
+}
+
+/* Prevent CSS transitions from conflicting with GSAP animations */
+.gsap-animated {
+  transition: none !important;
+}
 
 @layer base {
   :root {

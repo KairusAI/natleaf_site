@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useCallback } from "react";
 import { Workflow, Smartphone, Bot, Link2, ArrowRight } from "lucide-react";
 import { LiquidGlass } from "@/components/ui/liquid-glass";
 import gsap from "gsap";
@@ -58,17 +58,17 @@ export function ServicesSection() {
       if (headerRef.current) {
         const elements = headerRef.current.children;
         gsap.fromTo(elements,
-          { y: 40, opacity: 0 },
+          { y: 40, autoAlpha: 0 },
           {
             y: 0,
-            opacity: 1,
+            autoAlpha: 1,
             duration: 0.8,
             stagger: 0.12,
             ease: "power3.out",
             scrollTrigger: {
               trigger: headerRef.current,
               start: "top 85%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -82,12 +82,12 @@ export function ServicesSection() {
         gsap.fromTo(cards,
           { 
             y: 60, 
-            opacity: 0,
+            autoAlpha: 0,
             scale: 0.95,
           },
           {
             y: 0,
-            opacity: 1,
+            autoAlpha: 1,
             scale: 1,
             duration: 0.7,
             stagger: {
@@ -98,104 +98,109 @@ export function ServicesSection() {
             scrollTrigger: {
               trigger: gridRef.current,
               start: "top 80%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
-
-        // Setup hover interactions for each card
-        Array.from(cards).forEach((card) => {
-          const iconContainer = card.querySelector('.service-icon');
-          const arrow = card.querySelector('.service-arrow');
-          const features = card.querySelectorAll('.service-feature');
-          const title = card.querySelector('.service-title');
-
-          card.addEventListener('mouseenter', () => {
-            gsap.to(card, {
-              y: -8,
-              scale: 1.02,
-              duration: 0.4,
-              ease: "power2.out",
-            });
-            
-            if (iconContainer) {
-              gsap.to(iconContainer, {
-                scale: 1.15,
-                rotate: 5,
-                duration: 0.4,
-                ease: "back.out(2)",
-              });
-            }
-
-            if (arrow) {
-              gsap.to(arrow, {
-                x: 5,
-                opacity: 1,
-                duration: 0.3,
-                ease: "power2.out",
-              });
-            }
-
-            gsap.to(features, {
-              scale: 1.05,
-              duration: 0.3,
-              stagger: 0.05,
-              ease: "power2.out",
-            });
-
-            if (title) {
-              gsap.to(title, {
-                color: "hsl(var(--primary))",
-                duration: 0.3,
-              });
-            }
-          });
-
-          card.addEventListener('mouseleave', () => {
-            gsap.to(card, {
-              y: 0,
-              scale: 1,
-              duration: 0.4,
-              ease: "power2.out",
-            });
-            
-            if (iconContainer) {
-              gsap.to(iconContainer, {
-                scale: 1,
-                rotate: 0,
-                duration: 0.4,
-                ease: "power2.out",
-              });
-            }
-
-            if (arrow) {
-              gsap.to(arrow, {
-                x: -8,
-                opacity: 0,
-                duration: 0.3,
-                ease: "power2.out",
-              });
-            }
-
-            gsap.to(features, {
-              scale: 1,
-              duration: 0.3,
-              stagger: 0.05,
-              ease: "power2.out",
-            });
-
-            if (title) {
-              gsap.to(title, {
-                color: "hsl(var(--foreground))",
-                duration: 0.3,
-              });
-            }
-          });
-        });
       }
     }, containerRef);
 
     return () => ctx.revert();
+  }, []);
+
+  // Hover handlers - separate from GSAP context for proper cleanup
+  const handleCardEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const iconContainer = card.querySelector('.service-icon');
+    const arrow = card.querySelector('.service-arrow');
+    const features = card.querySelectorAll('.service-feature');
+    const title = card.querySelector('.service-title');
+
+    gsap.to(card, {
+      y: -8,
+      scale: 1.02,
+      duration: 0.4,
+      ease: "power2.out",
+    });
+    
+    if (iconContainer) {
+      gsap.to(iconContainer, {
+        scale: 1.15,
+        rotate: 5,
+        duration: 0.4,
+        ease: "back.out(2)",
+      });
+    }
+
+    if (arrow) {
+      gsap.to(arrow, {
+        x: 5,
+        opacity: 1,
+        duration: 0.3,
+        ease: "power2.out",
+      });
+    }
+
+    gsap.to(features, {
+      scale: 1.05,
+      duration: 0.3,
+      stagger: 0.05,
+      ease: "power2.out",
+    });
+
+    if (title) {
+      gsap.to(title, {
+        color: "hsl(var(--primary))",
+        duration: 0.3,
+      });
+    }
+  }, []);
+
+  const handleCardLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const iconContainer = card.querySelector('.service-icon');
+    const arrow = card.querySelector('.service-arrow');
+    const features = card.querySelectorAll('.service-feature');
+    const title = card.querySelector('.service-title');
+
+    gsap.to(card, {
+      y: 0,
+      scale: 1,
+      duration: 0.4,
+      ease: "power2.out",
+    });
+    
+    if (iconContainer) {
+      gsap.to(iconContainer, {
+        scale: 1,
+        rotate: 0,
+        duration: 0.4,
+        ease: "power2.out",
+      });
+    }
+
+    if (arrow) {
+      gsap.to(arrow, {
+        x: -8,
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.out",
+      });
+    }
+
+    gsap.to(features, {
+      scale: 1,
+      duration: 0.3,
+      stagger: 0.05,
+      ease: "power2.out",
+    });
+
+    if (title) {
+      gsap.to(title, {
+        color: "hsl(var(--foreground))",
+        duration: 0.3,
+      });
+    }
   }, []);
 
   return (
@@ -212,13 +217,13 @@ export function ServicesSection() {
           ref={headerRef}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block opacity-0">
+          <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block gsap-hidden">
             O que fazemos
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 opacity-0">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 gsap-hidden">
             Soluções que <span className="text-primary">impulsionam</span> resultados
           </h2>
-          <p className="text-muted-foreground text-lg md:text-xl opacity-0">
+          <p className="text-muted-foreground text-lg md:text-xl gsap-hidden">
             Tecnologia de ponta aplicada ao seu negócio de forma prática e estratégica.
           </p>
         </div>
@@ -228,7 +233,9 @@ export function ServicesSection() {
           {services.map((service) => (
             <div
               key={service.title}
-              className="opacity-0"
+              className="gsap-hidden"
+              onMouseEnter={handleCardEnter}
+              onMouseLeave={handleCardLeave}
             >
               <LiquidGlass className="group h-full p-8 rounded-2xl hover:border-primary/50 transition-colors duration-300 cursor-pointer">
                 <div className="flex items-start gap-5">

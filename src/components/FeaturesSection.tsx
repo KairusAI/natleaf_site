@@ -65,7 +65,7 @@ export function FeaturesSection() {
             scrollTrigger: {
               trigger: leftContentRef.current,
               start: "top 80%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -83,7 +83,7 @@ export function FeaturesSection() {
             scrollTrigger: {
               trigger: statsRef.current,
               start: "top 85%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -97,7 +97,7 @@ export function FeaturesSection() {
           scrollTrigger: {
             trigger: yearsCountRef.current,
             start: "top 85%",
-            toggleActions: "play none none reset",
+            once: true,
           },
           onUpdate: () => {
             if (yearsCountRef.current) {
@@ -115,7 +115,7 @@ export function FeaturesSection() {
           scrollTrigger: {
             trigger: hoursCountRef.current,
             start: "top 85%",
-            toggleActions: "play none none reset",
+            once: true,
           },
           onUpdate: () => {
             if (hoursCountRef.current) {
@@ -147,7 +147,7 @@ export function FeaturesSection() {
             scrollTrigger: {
               trigger: gridRef.current,
               start: "top 80%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );

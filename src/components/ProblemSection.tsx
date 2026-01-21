@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useEffect, useCallback } from "react";
 import { AlertCircle, Puzzle, Brain } from "lucide-react";
 import { LiquidGlass } from "@/components/ui/liquid-glass";
 import gsap from "gsap";
@@ -39,12 +39,12 @@ export function ProblemSection() {
         gsap.fromTo(elements,
           { 
             x: -60, 
-            opacity: 0,
+            autoAlpha: 0,
             clipPath: "inset(0 100% 0 0)",
           },
           {
             x: 0,
-            opacity: 1,
+            autoAlpha: 1,
             clipPath: "inset(0 0% 0 0)",
             duration: 0.9,
             stagger: 0.15,
@@ -52,7 +52,7 @@ export function ProblemSection() {
             scrollTrigger: {
               trigger: headerRef.current,
               start: "top 85%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -65,12 +65,12 @@ export function ProblemSection() {
         gsap.fromTo(cards,
           { 
             y: 60, 
-            opacity: 0,
+            autoAlpha: 0,
             scale: 0.9,
           },
           {
             y: 0,
-            opacity: 1,
+            autoAlpha: 1,
             scale: 1,
             duration: 0.7,
             stagger: 0.15,
@@ -78,46 +78,51 @@ export function ProblemSection() {
             scrollTrigger: {
               trigger: cardsRef.current,
               start: "top 80%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
-
-        // Hover effects
-        Array.from(cards).forEach((card) => {
-          const iconContainer = card.querySelector('.problem-icon');
-          
-          card.addEventListener('mouseenter', () => {
-            gsap.to(card, {
-              y: -8,
-              scale: 1.02,
-              duration: 0.4,
-              ease: "power2.out",
-            });
-            
-            // Shake do ícone no hover
-            if (iconContainer) {
-              gsap.to(iconContainer, {
-                rotate: [0, -5, 5, -5, 5, 0],
-                duration: 0.5,
-                ease: "power2.out",
-              });
-            }
-          });
-
-          card.addEventListener('mouseleave', () => {
-            gsap.to(card, {
-              y: 0,
-              scale: 1,
-              duration: 0.4,
-              ease: "power2.out",
-            });
-          });
-        });
       }
     }, containerRef);
 
     return () => ctx.revert();
+  }, []);
+
+  // Hover handlers - separate from GSAP context for proper cleanup
+  const handleCardEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const iconContainer = card.querySelector('.problem-icon');
+    
+    gsap.to(card, {
+      y: -8,
+      scale: 1.02,
+      duration: 0.4,
+      ease: "power2.out",
+    });
+    
+    if (iconContainer) {
+      gsap.to(iconContainer, {
+        keyframes: [
+          { rotate: -5, duration: 0.1 },
+          { rotate: 5, duration: 0.1 },
+          { rotate: -5, duration: 0.1 },
+          { rotate: 5, duration: 0.1 },
+          { rotate: 0, duration: 0.1 },
+        ],
+        ease: "power2.out",
+      });
+    }
+  }, []);
+
+  const handleCardLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    
+    gsap.to(card, {
+      y: 0,
+      scale: 1,
+      duration: 0.4,
+      ease: "power2.out",
+    });
   }, []);
 
   return (
@@ -135,14 +140,14 @@ export function ProblemSection() {
           ref={headerRef}
           className="max-w-3xl mb-16"
         >
-          <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block opacity-0">
+          <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block gsap-hidden">
             O Problema
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 opacity-0">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 gsap-hidden">
             Empresas sabem que precisam de{" "}
             <span className="text-primary">automação e IA</span>
           </h2>
-          <p className="text-muted-foreground text-lg md:text-xl opacity-0">
+          <p className="text-muted-foreground text-lg md:text-xl gsap-hidden">
             O problema é quase sempre o mesmo:
           </p>
         </div>
@@ -152,7 +157,9 @@ export function ProblemSection() {
           {problems.map((problem) => (
             <div
               key={problem.title}
-              className="opacity-0"
+              className="gsap-hidden"
+              onMouseEnter={handleCardEnter}
+              onMouseLeave={handleCardLeave}
             >
               <LiquidGlass 
                 className="group h-full p-8 rounded-2xl hover:border-primary/50 transition-colors duration-300 cursor-pointer"

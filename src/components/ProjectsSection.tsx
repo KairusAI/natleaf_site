@@ -31,17 +31,17 @@ export const ProjectsSection = () => {
       if (headerRef.current) {
         const elements = headerRef.current.children;
         gsap.fromTo(elements,
-          { y: 50, opacity: 0 },
+          { y: 50, autoAlpha: 0 },
           {
             y: 0,
-            opacity: 1,
+            autoAlpha: 1,
             duration: 0.8,
             stagger: 0.12,
             ease: "power3.out",
             scrollTrigger: {
               trigger: headerRef.current,
               start: "top 85%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -51,12 +51,12 @@ export const ProjectsSection = () => {
       if (carouselRef.current) {
         gsap.fromTo(carouselRef.current,
           { 
-            opacity: 0, 
+            autoAlpha: 0, 
             scaleX: 0.9,
             clipPath: "inset(0 50% 0 50%)",
           },
           {
-            opacity: 1,
+            autoAlpha: 1,
             scaleX: 1,
             clipPath: "inset(0 0% 0 0%)",
             duration: 1.2,
@@ -64,7 +64,7 @@ export const ProjectsSection = () => {
             scrollTrigger: {
               trigger: carouselRef.current,
               start: "top 85%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -74,29 +74,59 @@ export const ProjectsSection = () => {
     return () => ctx.revert();
   }, []);
 
-  // GSAP infinite scroll animation
+  // GSAP infinite scroll animation with resize handling
   useEffect(() => {
     if (!trackRef.current) return;
 
-    const track = trackRef.current;
-    const items = track.children;
-    const totalWidth = Array.from(items).slice(0, projects.length).reduce(
-      (acc, item) => acc + (item as HTMLElement).offsetWidth + 64, 0
-    );
+    let tween: gsap.core.Tween | null = null;
+    
+    const setupAnimation = () => {
+      const track = trackRef.current;
+      if (!track) return;
+      
+      const items = track.children;
+      const totalWidth = Array.from(items).slice(0, projects.length).reduce(
+        (acc, item) => acc + (item as HTMLElement).offsetWidth + 64, 0
+      );
 
-    // Create the infinite scroll animation - never pauses
-    const tween = gsap.to(track, {
-      x: -totalWidth,
-      duration: 25,
-      ease: "none",
-      repeat: -1,
-      modifiers: {
-        x: gsap.utils.unitize(x => parseFloat(x) % totalWidth)
+      // Kill existing tween if any
+      if (tween) {
+        tween.kill();
       }
-    });
+
+      // Create the infinite scroll animation - never pauses
+      tween = gsap.to(track, {
+        x: -totalWidth,
+        duration: 25,
+        ease: "none",
+        repeat: -1,
+        modifiers: {
+          x: gsap.utils.unitize(x => parseFloat(x) % totalWidth)
+        }
+      });
+    };
+
+    // Initial setup
+    setupAnimation();
+
+    // Handle resize with debounce
+    let resizeTimeout: number;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = window.setTimeout(() => {
+        setupAnimation();
+        ScrollTrigger.refresh();
+      }, 250);
+    };
+
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      tween.kill();
+      if (tween) {
+        tween.kill();
+      }
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
     };
   }, []);
 
@@ -111,13 +141,13 @@ export const ProjectsSection = () => {
             ref={headerRef}
             className="text-center"
           >
-            <span className="text-base font-medium text-primary tracking-wider uppercase block opacity-0">
+            <span className="text-base font-medium text-primary tracking-wider uppercase block gsap-hidden">
               Quem já confia na Kairus
             </span>
-            <h2 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight opacity-0">
+            <h2 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight gsap-hidden">
               Empresas que <span className="text-primary">transformaram</span> seus negócios
             </h2>
-            <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto opacity-0">
+            <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto gsap-hidden">
               Conheça algumas das empresas que escolheram a Kairus para impulsionar seus resultados
             </p>
           </div>
@@ -126,7 +156,7 @@ export const ProjectsSection = () => {
         {/* Carousel Container */}
         <div
           ref={carouselRef}
-          className="relative overflow-hidden w-full opacity-0"
+          className="relative overflow-hidden w-full gsap-hidden"
           style={{
             background: "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)",
             backdropFilter: "blur(24px) saturate(180%)",

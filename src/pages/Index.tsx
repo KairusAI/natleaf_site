@@ -10,8 +10,12 @@ import { ProjectsSection } from "@/components/ProjectsSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { CTASection } from "@/components/CTASection";
 import { Footer } from "@/components/Footer";
+// import { useSmoothScroll } from "@/hooks/use-smooth-scroll";
 
 const Index = () => {
+  // Temporarily disabled for debugging - uncomment to re-enable smooth scroll
+  // useSmoothScroll();
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />

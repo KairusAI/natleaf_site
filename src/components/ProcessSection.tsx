@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useState } from "react";
 import { Search, PenTool, Code, Rocket } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -39,6 +39,7 @@ export function ProcessSection() {
   const progressLineRef = useRef<HTMLDivElement>(null);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const animationRef = useRef<gsap.core.Timeline | null>(null);
 
   useLayoutEffect(() => {
     if (!containerRef.current || !timelineRef.current) return;
@@ -48,17 +49,17 @@ export function ProcessSection() {
       if (headerRef.current) {
         const headerElements = headerRef.current.children;
         gsap.fromTo(headerElements,
-          { y: 60, opacity: 0 },
+          { y: 60, autoAlpha: 0 },
           {
             y: 0,
-            opacity: 1,
+            autoAlpha: 1,
             duration: 0.8,
             stagger: 0.15,
             ease: "power3.out",
             scrollTrigger: {
               trigger: headerRef.current,
               start: "top 85%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -89,9 +90,12 @@ export function ProcessSection() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top 60%",
-          toggleActions: "play none none reset",
+          once: true,
         },
       });
+
+      // Store the timeline for potential cleanup
+      animationRef.current = tl;
 
       // Animate each step sequentially with automatic timing
       steps.forEach((_, index) => {
@@ -124,6 +128,7 @@ export function ProcessSection() {
           duration: 0.5,
           ease: "back.out(1.7)",
           onComplete: () => dot?.classList.add('active'),
+          onReverseComplete: () => dot?.classList.remove('active'),
         }, stepDelay);
 
         // Icon fades in
@@ -168,7 +173,12 @@ export function ProcessSection() {
 
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      if (animationRef.current) {
+        animationRef.current.kill();
+      }
+      ctx.revert();
+    };
   }, []);
 
   return (
@@ -183,10 +193,10 @@ export function ProcessSection() {
           ref={headerRef}
           className="text-center max-w-3xl mx-auto mb-20"
         >
-          <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block opacity-0">
+          <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block gsap-hidden">
             Como Funciona
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 opacity-0">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 gsap-hidden">
             Simples, transparente e{" "}
             <span className="text-primary">focado em resultado</span>
           </h2>

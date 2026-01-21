@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useCallback } from "react";
 import { Sparkles, Target, MessageCircle, Brain, Handshake, Check } from "lucide-react";
 import { LiquidGlass } from "@/components/ui/liquid-glass";
 import gsap from "gsap";
@@ -48,12 +48,12 @@ export function WhyKairusSection() {
         gsap.fromTo(elements,
           { 
             x: -80, 
-            opacity: 0,
+            autoAlpha: 0,
             scale: 0.95,
           },
           {
             x: 0,
-            opacity: 1,
+            autoAlpha: 1,
             scale: 1,
             duration: 0.9,
             stagger: 0.12,
@@ -61,7 +61,7 @@ export function WhyKairusSection() {
             scrollTrigger: {
               trigger: leftContentRef.current,
               start: "top 80%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
@@ -74,13 +74,13 @@ export function WhyKairusSection() {
         gsap.fromTo(cards,
           { 
             y: 50, 
-            opacity: 0,
+            autoAlpha: 0,
             scale: 0.9,
             rotateY: -20,
           },
           {
             y: 0,
-            opacity: 1,
+            autoAlpha: 1,
             scale: 1,
             rotateY: 0,
             duration: 0.7,
@@ -92,55 +92,57 @@ export function WhyKairusSection() {
             scrollTrigger: {
               trigger: gridRef.current,
               start: "top 80%",
-              toggleActions: "play none none reset",
+              once: true,
             },
           }
         );
-
-        // Hover effects
-        Array.from(cards).forEach((card) => {
-          const iconContainer = card.querySelector('.differential-icon');
-          
-          card.addEventListener('mouseenter', () => {
-            gsap.to(card, {
-              y: -5,
-              scale: 1.03,
-              duration: 0.3,
-              ease: "power2.out",
-            });
-            
-            if (iconContainer) {
-              gsap.to(iconContainer, {
-                scale: 1.2,
-                rotate: 15,
-                duration: 0.4,
-                ease: "back.out(2)",
-              });
-            }
-          });
-
-          card.addEventListener('mouseleave', () => {
-            gsap.to(card, {
-              y: 0,
-              scale: 1,
-              duration: 0.3,
-              ease: "power2.out",
-            });
-            
-            if (iconContainer) {
-              gsap.to(iconContainer, {
-                scale: 1,
-                rotate: 0,
-                duration: 0.3,
-                ease: "power2.out",
-              });
-            }
-          });
-        });
       }
     }, containerRef);
 
     return () => ctx.revert();
+  }, []);
+
+  // Hover handlers - separate from GSAP context for proper cleanup
+  const handleCardEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const iconContainer = card.querySelector('.differential-icon');
+    
+    gsap.to(card, {
+      y: -5,
+      scale: 1.03,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+    
+    if (iconContainer) {
+      gsap.to(iconContainer, {
+        scale: 1.2,
+        rotate: 15,
+        duration: 0.4,
+        ease: "back.out(2)",
+      });
+    }
+  }, []);
+
+  const handleCardLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const iconContainer = card.querySelector('.differential-icon');
+    
+    gsap.to(card, {
+      y: 0,
+      scale: 1,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+    
+    if (iconContainer) {
+      gsap.to(iconContainer, {
+        scale: 1,
+        rotate: 0,
+        duration: 0.3,
+        ease: "power2.out",
+      });
+    }
   }, []);
 
   return (
@@ -153,14 +155,14 @@ export function WhyKairusSection() {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Content */}
           <div ref={leftContentRef}>
-            <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block opacity-0">
+            <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block gsap-hidden">
               Por que Kairus
             </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 opacity-0">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 gsap-hidden">
               Tecnologia com <span className="text-primary">estratégia</span>,{" "}
               não só código
             </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed opacity-0">
+            <p className="text-muted-foreground text-lg leading-relaxed gsap-hidden">
               Entendemos que tecnologia só faz sentido quando gera resultado real. 
               Por isso, cada projeto é tratado como uma parceria, não como um simples serviço.
             </p>
@@ -175,8 +177,10 @@ export function WhyKairusSection() {
             {differentials.map((item) => (
               <div
                 key={item.title}
-                className="opacity-0"
+                className="gsap-hidden"
                 style={{ transformStyle: "preserve-3d" }}
+                onMouseEnter={handleCardEnter}
+                onMouseLeave={handleCardLeave}
               >
                 <LiquidGlass className="group p-5 rounded-xl hover:border-primary/50 transition-colors duration-300 h-full cursor-pointer">
                   <div className="flex items-start gap-3">

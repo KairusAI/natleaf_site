@@ -55,8 +55,8 @@ export function HeroSection() {
       // Animação do grid de fundo
       if (gridRef.current) {
         gsap.fromTo(gridRef.current,
-          { opacity: 0, scale: 1.1 },
-          { opacity: 0.02, scale: 1, duration: 2, ease: "power2.out" }
+          { autoAlpha: 0, scale: 1.1 },
+          { autoAlpha: 0.02, scale: 1, duration: 2, ease: "power2.out" }
         );
       }
 
@@ -64,8 +64,8 @@ export function HeroSection() {
       if (headlineRef.current) {
         const words = headlineRef.current.querySelectorAll('.hero-word');
         tl.fromTo(words,
-          { y: 100, opacity: 0, rotationX: -80, transformOrigin: "center bottom" },
-          { y: 0, opacity: 1, rotationX: 0, duration: 1.2, stagger: 0.08, ease: "power4.out" },
+          { y: 100, autoAlpha: 0, rotationX: -80, transformOrigin: "center bottom" },
+          { y: 0, autoAlpha: 1, rotationX: 0, duration: 1.2, stagger: 0.08, ease: "power4.out" },
           0.3
         );
       }
@@ -73,8 +73,8 @@ export function HeroSection() {
       // Subheadline com reveal suave
       if (subheadlineRef.current) {
         tl.fromTo(subheadlineRef.current,
-          { y: 40, opacity: 0, clipPath: "inset(100% 0 0 0)" },
-          { y: 0, opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 1, ease: "power3.out" },
+          { y: 40, autoAlpha: 0, clipPath: "inset(100% 0 0 0)" },
+          { y: 0, autoAlpha: 1, clipPath: "inset(0% 0 0 0)", duration: 1, ease: "power3.out" },
           "-=0.6"
         );
       }
@@ -83,8 +83,8 @@ export function HeroSection() {
       if (ctaRef.current) {
         const buttons = ctaRef.current.querySelectorAll('button');
         tl.fromTo(buttons,
-          { y: 30, opacity: 0, scale: 0.9 },
-          { y: 0, opacity: 1, scale: 1, duration: 0.8, stagger: 0.15, ease: "back.out(1.7)" },
+          { y: 30, autoAlpha: 0, scale: 0.9 },
+          { y: 0, autoAlpha: 1, scale: 1, duration: 0.8, stagger: 0.15, ease: "back.out(1.7)" },
           "-=0.5"
         );
       }
@@ -92,8 +92,8 @@ export function HeroSection() {
       // Scroll indicator
       if (scrollIndicatorRef.current) {
         tl.fromTo(scrollIndicatorRef.current,
-          { opacity: 0, y: -20 },
-          { opacity: 1, y: 0, duration: 0.8 },
+          { autoAlpha: 0, y: -20 },
+          { autoAlpha: 1, y: 0, duration: 0.8 },
           "-=0.3"
         );
 
@@ -110,8 +110,8 @@ export function HeroSection() {
       // Hero Image animation
       if (heroImageRef.current) {
         tl.fromTo(heroImageRef.current,
-          { opacity: 0, scale: 0.8, x: 50, rotate: -10 },
-          { opacity: 1, scale: 1, x: 0, rotate: 0, duration: 1.2, ease: "power3.out" },
+          { autoAlpha: 0, scale: 0.8, x: 50, rotate: -10 },
+          { autoAlpha: 1, scale: 1, x: 0, rotate: 0, duration: 1.2, ease: "power3.out" },
           "-=1"
         );
 
@@ -190,7 +190,7 @@ export function HeroSection() {
       {/* Ambient Glow Background */}
       <div 
         ref={glowRef}
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] pointer-events-none opacity-0"
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] pointer-events-none gsap-hidden"
         style={{
           background: "radial-gradient(ellipse at center, hsl(210 95% 60% / 0.05) 0%, transparent 70%)",
           filter: "blur(80px)",
@@ -200,7 +200,7 @@ export function HeroSection() {
       {/* Grid Pattern */}
       <div
         ref={gridRef}
-        className="absolute inset-0 opacity-0"
+        className="absolute inset-0 gsap-hidden"
         style={{
           backgroundImage: `linear-gradient(hsl(var(--foreground)) 1px, transparent 1px),
                            linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)`,
@@ -249,7 +249,7 @@ export function HeroSection() {
             {/* Subheadline */}
             <p
               ref={subheadlineRef}
-              className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl sm:max-w-2xl mx-auto sm:mx-0 mb-8 sm:mb-10 leading-relaxed opacity-0"
+              className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl sm:max-w-2xl mx-auto sm:mx-0 mb-8 sm:mb-10 leading-relaxed gsap-hidden"
             >
               Automação e inteligência artificial sob medida para resolver problemas reais do seu negócio, do jeito certo, pensado para o seu momento.
             </p>
@@ -259,7 +259,11 @@ export function HeroSection() {
               ref={ctaRef}
               className="flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-3 sm:gap-4 pointer-events-auto"
             >
-              <Button size="lg" className="group px-6 sm:px-8 w-full sm:w-auto relative overflow-hidden opacity-0">
+              <Button 
+                size="lg" 
+                className="group px-6 sm:px-8 w-full sm:w-auto relative overflow-hidden gsap-hidden"
+                onClick={() => window.open('https://wa.me/5521971201512?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20um%20especialista.', '_blank')}
+              >
                 <span className="relative z-10 flex items-center">
                   Falar com um especialista
                   <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -268,7 +272,7 @@ export function HeroSection() {
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="group px-6 sm:px-8 w-full sm:w-auto opacity-0"
+                className="group px-6 sm:px-8 w-full sm:w-auto gsap-hidden"
                 onClick={(e) => {
                   e.preventDefault();
                   const servicesSection = document.getElementById("process");
@@ -280,6 +284,7 @@ export function HeroSection() {
                       top: offsetPosition,
                       behavior: "smooth",
                     });
+                    setTimeout(() => ScrollTrigger.refresh(), 1000);
                   }
                 }}
               >
@@ -292,7 +297,7 @@ export function HeroSection() {
           {/* Right Content - Hero Image */}
           <div 
             ref={heroImageRef}
-            className="relative hidden lg:flex items-center justify-center opacity-0"
+            className="relative hidden lg:flex items-center justify-center gsap-hidden"
           >
             {/* Glow effect behind image */}
             <div 
@@ -316,11 +321,18 @@ export function HeroSection() {
       {/* Scroll Indicator */}
       <div
         ref={scrollIndicatorRef}
-        className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer opacity-0"
+        className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer gsap-hidden"
         onClick={() => {
           const nextSection = document.getElementById("problem");
           if (nextSection) {
-            nextSection.scrollIntoView({ behavior: "smooth" });
+            const navbarHeight = 100;
+            const elementPosition = nextSection.getBoundingClientRect().top + window.pageYOffset;
+            const offsetPosition = elementPosition - navbarHeight;
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: "smooth",
+            });
+            setTimeout(() => ScrollTrigger.refresh(), 1000);
           }
         }}
       >
