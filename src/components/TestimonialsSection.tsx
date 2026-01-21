@@ -8,31 +8,31 @@ gsap.registerPlugin(ScrollTrigger);
 
 const testimonials = [
   {
-    name: "Carlos Silva",
+    name: "Thiago Bacci",
     role: "CEO",
-    company: "TechCorp Solutions",
+    company: "A10 Football",
     content:
-      "A Kairus transformou completamente nossa operação com soluções de IA personalizadas. O retorno sobre investimento foi impressionante e a equipe sempre disponível para suporte.",
+      "A Kairus transformou completamente nossa operação com a solução personalizadas. O retorno sobre investimento foi impressionante e a equipe sempre disponível para suporte.",
     rating: 5,
-    avatar: "CS",
+    avatar: "TB",
   },
   {
-    name: "Ana Paula Santos",
-    role: "Diretora de Inovação",
-    company: "InnovaTech",
+    name: "Cristiane Rocha",
+    role: "CEO",
+    company: "RAE Nutrition",
     content:
       "Trabalhar com a Kairus foi uma experiência excepcional. Eles entenderam perfeitamente nossas necessidades e entregaram uma solução que superou todas as expectativas.",
     rating: 5,
     avatar: "AS",
   },
   {
-    name: "Roberto Mendes",
-    role: "CTO",
-    company: "Digital Ventures",
+    name: "João Magalhães",
+    role: "CEO",
+    company: "Natleaf",
     content:
       "A automação de processos implementada pela Kairus reduziu nosso tempo de resposta em 70%. Profissionais extremamente competentes e dedicados ao sucesso do cliente.",
     rating: 5,
-    avatar: "RM",
+    avatar: "JM",
   },
 ];
 

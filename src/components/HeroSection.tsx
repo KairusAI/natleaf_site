@@ -64,9 +64,9 @@ export function HeroSection() {
       if (headlineRef.current) {
         const words = headlineRef.current.querySelectorAll('.hero-word');
         tl.fromTo(words,
-          { y: 100, autoAlpha: 0, rotationX: -80, transformOrigin: "center bottom" },
-          { y: 0, autoAlpha: 1, rotationX: 0, duration: 1.2, stagger: 0.08, ease: "power4.out" },
-          0.3
+          { y: 80, autoAlpha: 0, filter: "blur(10px)" },
+          { y: 0, autoAlpha: 1, filter: "blur(0px)", duration: 1.4, stagger: 0.15, ease: "power3.out" },
+          0.2
         );
       }
 
@@ -109,30 +109,12 @@ export function HeroSection() {
 
       // Hero Image animation
       if (heroImageRef.current) {
+        // Entrada mais elegante com blur e scale suave
         tl.fromTo(heroImageRef.current,
-          { autoAlpha: 0, scale: 0.8, x: 50, rotate: -10 },
-          { autoAlpha: 1, scale: 1, x: 0, rotate: 0, duration: 1.2, ease: "power3.out" },
-          "-=1"
+          { autoAlpha: 0, scale: 0.85, y: 30, filter: "blur(12px)" },
+          { autoAlpha: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 1.6, ease: "power3.out" },
+          "-=0.8"
         );
-
-        // Floating animation contínua
-        gsap.to(heroImageRef.current, {
-          y: -15,
-          duration: 3,
-          repeat: -1,
-          yoyo: true,
-          ease: "power1.inOut",
-          delay: 1.5,
-        });
-
-        // Subtle rotation animation
-        gsap.to(heroImageRef.current.querySelector('img'), {
-          rotate: 5,
-          duration: 6,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        });
       }
     }, containerRef);
 
@@ -182,6 +164,69 @@ export function HeroSection() {
     };
   }, []);
 
+  // Efeito 3D Tilt Magnético na Imagem Hero
+  useEffect(() => {
+    const container = heroImageRef.current;
+    if (!container) return;
+
+    const img = container.querySelector('img');
+    if (!img) return;
+
+    // Configuração inicial de perspectiva
+    gsap.set(container, { perspective: 1000 });
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height;
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      
+      const xPct = mouseX / width - 0.5;
+      const yPct = mouseY / height - 0.5;
+
+      gsap.to(img, {
+        rotationY: xPct * 25,
+        rotationX: -yPct * 25,
+        ease: "power2.out",
+        duration: 0.5,
+        transformPerspective: 1000, 
+      });
+
+      // Move levemente o container também para efeito de profundidade
+      gsap.to(container, {
+        x: xPct * 20,
+        y: yPct * 20,
+        duration: 0.5,
+        ease: "power2.out"
+      });
+    };
+
+    const handleMouseLeave = () => {
+      gsap.to(img, {
+        rotationY: 0,
+        rotationX: 0,
+        ease: "power3.out",
+        duration: 1.2,
+      });
+      
+      gsap.to(container, {
+        x: 0,
+        y: 0,
+        duration: 1.2,
+        ease: "elastic.out(1, 0.3)"
+      });
+    };
+
+    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      container.removeEventListener('mousemove', handleMouseMove);
+      container.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+
   return (
     <section
       ref={containerRef}
@@ -226,19 +271,19 @@ export function HeroSection() {
               <span className="hero-word inline-block">ideias</span>{" "}
               <span className="hero-word inline-block">em</span>{" "}
               <br className="hidden sm:block" />
-              <span className="text-primary inline-block min-w-[280px] sm:min-w-[320px] md:min-w-[400px] relative overflow-hidden">
+              <span className="text-primary inline-block min-w-[280px] sm:min-w-[320px] md:min-w-[400px] relative overflow-visible py-1">
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={currentWordIndex}
-                    initial={{ y: 40, opacity: 0, rotateX: -90 }}
-                    animate={{ y: 0, opacity: 1, rotateX: 0 }}
-                    exit={{ y: -40, opacity: 0, rotateX: 90 }}
+                    initial={{ y: 8, opacity: 0, filter: "blur(4px)" }}
+                    animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                    exit={{ y: -8, opacity: 0, filter: "blur(4px)" }}
                     transition={{ 
-                      duration: 0.5, 
-                      ease: [0.25, 0.1, 0.25, 1],
+                      duration: 0.45, 
+                      ease: [0.33, 1, 0.68, 1],
                     }}
-                    className="inline-block"
-                    style={{ transformOrigin: "center bottom" }}
+                    className="inline-block leading-tight"
+                    style={{ display: 'inline-block' }}
                   >
                     {rotatingWords[currentWordIndex]}
                   </motion.span>
@@ -297,7 +342,7 @@ export function HeroSection() {
           {/* Right Content - Hero Image */}
           <div 
             ref={heroImageRef}
-            className="relative hidden lg:flex items-center justify-center gsap-hidden"
+            className="relative hidden lg:flex items-center justify-center gsap-hidden pointer-events-auto"
           >
             {/* Glow effect behind image */}
             <div 

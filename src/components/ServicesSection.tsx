@@ -234,10 +234,8 @@ export function ServicesSection() {
             <div
               key={service.title}
               className="gsap-hidden"
-              onMouseEnter={handleCardEnter}
-              onMouseLeave={handleCardLeave}
             >
-              <LiquidGlass className="group h-full p-8 rounded-2xl hover:border-primary/50 transition-colors duration-300 cursor-pointer">
+              <LiquidGlass onMouseEnter={handleCardEnter} onMouseLeave={handleCardLeave} className="group h-full p-8 rounded-2xl hover:border-primary/50 transition-colors duration-300 cursor-pointer">
                 <div className="flex items-start gap-5">
                   {/* Icon */}
                   <div className={`service-icon w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center flex-shrink-0 transition-colors duration-300`}>

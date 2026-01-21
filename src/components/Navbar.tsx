@@ -44,8 +44,11 @@ export function Navbar() {
         }
       );
 
-      // Nav links stagger entrance
-      gsap.fromTo(navLinksRef.current,
+      // Nav links stagger entrance (filter out null refs)
+      const navEls = Array.isArray(navLinksRef.current)
+        ? navLinksRef.current.filter(Boolean)
+        : navLinksRef.current;
+      gsap.fromTo(navEls,
         { y: -20, opacity: 0 },
         {
           y: 0,
@@ -93,31 +96,72 @@ export function Navbar() {
 
   useEffect(() => {
     let ticking = false;
-    
-    const handleScroll = () => {
+
+    const updateFrom = (scrollY: number) => {
       if (ticking) return;
-      
       ticking = true;
       requestAnimationFrame(() => {
-        const currentScrollY = window.scrollY;
-        
-        setIsScrolled(currentScrollY > 50);
-        
-        // Calcula o progresso do scroll
+        setIsScrolled(scrollY > 50);
+
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
         const scrollableHeight = documentHeight - windowHeight;
-        const progress = scrollableHeight > 0 ? (currentScrollY / scrollableHeight) * 100 : 0;
-        
+        const progress = scrollableHeight > 0 ? (scrollY / scrollableHeight) * 100 : 0;
+
         setScrollProgress(Math.min(100, Math.max(0, progress)));
+        // Determine active section from current scroll position (supports virtual scroll like Lenis)
+        try {
+          const navbarHeight = headerRef.current ? headerRef.current.offsetHeight : 100;
+          const sectionEls = navLinks
+            .map(link => document.getElementById(link.href.replace('#', '')))
+            .filter((el): el is HTMLElement => el !== null);
+
+          let foundActive = '';
+          for (const el of sectionEls) {
+            const top = el.getBoundingClientRect().top + window.pageYOffset;
+            if (top <= scrollY + navbarHeight + 20) {
+              foundActive = `#${el.id}`;
+            }
+          }
+
+          // If nothing matched and we're above first section, clear active
+          if (!foundActive) {
+            // If near top, clear; otherwise set to first
+            if (scrollY > (sectionEls[0]?.getBoundingClientRect().top + window.pageYOffset - navbarHeight)) {
+              foundActive = `#${sectionEls[0]?.id}` || '';
+            } else {
+              foundActive = '';
+            }
+          }
+
+          if (foundActive !== activeSection) setActiveSection(foundActive);
+        } catch (err) {
+          // ignore
+        }
         ticking = false;
       });
     };
-    
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    // native scroll listener (fallback)
+    const onWindowScroll = () => updateFrom(window.scrollY);
+
+    // Lenis virtual scroll listener — dispatched by `useSmoothScroll`
+    const onLenisScroll = (e: Event) => {
+      const detail: any = (e as CustomEvent).detail;
+      const scrollY = detail && typeof detail.scrollY === 'number' ? detail.scrollY : window.scrollY;
+      updateFrom(scrollY);
+    };
+
+    window.addEventListener("scroll", onWindowScroll, { passive: true });
+    window.addEventListener('lenis:scroll', onLenisScroll as EventListener);
+
+    // run once to sync initial state
+    updateFrom(window.scrollY);
+
+    return () => {
+      window.removeEventListener("scroll", onWindowScroll);
+      window.removeEventListener('lenis:scroll', onLenisScroll as EventListener);
+    };
   }, []);
 
   // Detecta a seção ativa usando Intersection Observer

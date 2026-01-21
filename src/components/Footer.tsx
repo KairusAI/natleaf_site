@@ -43,8 +43,11 @@ export function Footer() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Columns stagger animation
-      gsap.fromTo(columnsRef.current,
+      // Columns stagger animation (filter null refs)
+      const cols = Array.isArray(columnsRef.current)
+        ? columnsRef.current.filter(Boolean)
+        : columnsRef.current;
+      gsap.fromTo(cols,
         { 
           y: 50, 
           autoAlpha: 0 
@@ -63,8 +66,11 @@ export function Footer() {
         }
       );
 
-      // Social icons bounce in
-      gsap.fromTo(socialRef.current,
+      // Social icons bounce in (filter null refs)
+      const socials = Array.isArray(socialRef.current)
+        ? socialRef.current.filter(Boolean)
+        : socialRef.current;
+      gsap.fromTo(socials,
         { 
           scale: 0,
           rotation: -180,
