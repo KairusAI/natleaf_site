@@ -10,9 +10,9 @@ const testimonials = [
   {
     name: "Thiago Bacci",
     role: "CEO",
-    company: "A10 Football",
+    company: "A10 PRO",
     content:
-      "A Kairus transformou completamente nossa operação com a solução personalizadas. O retorno sobre investimento foi impressionante e a equipe sempre disponível para suporte.",
+      "A Kairus transformou completamente nossa operação com a solução personalizada. O retorno sobre investimento foi impressionante e a equipe sempre disponível para suporte.",
     rating: 5,
     avatar: "TB",
   },
