@@ -21,7 +21,7 @@ const testimonials = [
     role: "CEO",
     company: "RAE Nutrition",
     content:
-      "Trabalhar com a Kairus foi uma experiência excepcional. Eles entenderam perfeitamente nossas necessidades e entregaram uma solução que superou todas as expectativas.",
+      "A Kairus transformou nosso desafio em uma solução de agentes de IA robusta, viável e totalmente alinhada ao nosso contexto de negócio. O time vai além da entrega, mantendo um suporte ágil e colaborativo que garante evolução contínua da plataforma. Mais do que um fornecedor, a Kairus atua como parceira estratégica na construção de inovação com impacto real.",
     rating: 5,
     avatar: "AS",
   },
