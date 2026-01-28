@@ -77,6 +77,11 @@ export function ServicesSection() {
       // Cards animation com efeitos avançados
       if (gridRef.current) {
         const cards = gridRef.current.children;
+        // Set initial hover-related states to avoid fighting Tailwind transforms/transitions
+        gsap.set(gridRef.current.querySelectorAll(".service-arrow"), {
+          x: -8,
+          opacity: 0,
+        });
         
         // Entrance animation
         gsap.fromTo(cards,
@@ -116,11 +121,18 @@ export function ServicesSection() {
     const features = card.querySelectorAll('.service-feature');
     const title = card.querySelector('.service-title');
 
+    // Avoid tween accumulation/jank when moving mouse quickly
+    gsap.killTweensOf(card);
+    if (iconContainer) gsap.killTweensOf(iconContainer);
+    if (arrow) gsap.killTweensOf(arrow);
+    if (features?.length) gsap.killTweensOf(features);
+    if (title) gsap.killTweensOf(title);
+
     gsap.to(card, {
       y: -8,
-      scale: 1.02,
       duration: 0.4,
       ease: "power2.out",
+      overwrite: "auto",
     });
     
     if (iconContainer) {
@@ -129,6 +141,7 @@ export function ServicesSection() {
         rotate: 5,
         duration: 0.4,
         ease: "back.out(2)",
+        overwrite: "auto",
       });
     }
 
@@ -138,6 +151,7 @@ export function ServicesSection() {
         opacity: 1,
         duration: 0.3,
         ease: "power2.out",
+        overwrite: "auto",
       });
     }
 
@@ -146,12 +160,14 @@ export function ServicesSection() {
       duration: 0.3,
       stagger: 0.05,
       ease: "power2.out",
+      overwrite: "auto",
     });
 
     if (title) {
       gsap.to(title, {
         color: "hsl(var(--primary))",
         duration: 0.3,
+        overwrite: "auto",
       });
     }
   }, []);
@@ -163,11 +179,17 @@ export function ServicesSection() {
     const features = card.querySelectorAll('.service-feature');
     const title = card.querySelector('.service-title');
 
+    gsap.killTweensOf(card);
+    if (iconContainer) gsap.killTweensOf(iconContainer);
+    if (arrow) gsap.killTweensOf(arrow);
+    if (features?.length) gsap.killTweensOf(features);
+    if (title) gsap.killTweensOf(title);
+
     gsap.to(card, {
       y: 0,
-      scale: 1,
       duration: 0.4,
       ease: "power2.out",
+      overwrite: "auto",
     });
     
     if (iconContainer) {
@@ -176,6 +198,7 @@ export function ServicesSection() {
         rotate: 0,
         duration: 0.4,
         ease: "power2.out",
+        overwrite: "auto",
       });
     }
 
@@ -185,6 +208,7 @@ export function ServicesSection() {
         opacity: 0,
         duration: 0.3,
         ease: "power2.out",
+        overwrite: "auto",
       });
     }
 
@@ -193,12 +217,14 @@ export function ServicesSection() {
       duration: 0.3,
       stagger: 0.05,
       ease: "power2.out",
+      overwrite: "auto",
     });
 
     if (title) {
       gsap.to(title, {
         color: "hsl(var(--foreground))",
         duration: 0.3,
+        overwrite: "auto",
       });
     }
   }, []);
@@ -246,7 +272,7 @@ export function ServicesSection() {
                     {/* Title */}
                     <h3 className="service-title text-xl font-semibold text-foreground transition-colors duration-300 mb-2 flex items-center gap-2">
                       {service.title}
-                      <ArrowRight className="service-arrow w-4 h-4 opacity-0 -translate-x-2" />
+                      <ArrowRight className="service-arrow w-4 h-4 opacity-0" />
                     </h3>
 
                     {/* Description */}
@@ -259,7 +285,7 @@ export function ServicesSection() {
                       {service.features.map((feature) => (
                         <span
                           key={feature}
-                          className="service-feature text-xs px-3 py-1 rounded-full bg-primary/10 text-primary font-medium transition-all duration-300"
+                          className="service-feature text-xs px-3 py-1 rounded-full bg-primary/10 text-primary font-medium"
                         >
                           {feature}
                         </span>
