@@ -78,7 +78,7 @@ export function CTASection() {
         hasAnimatedRef.current = true;
         const words = ORIGINAL_TITLE.split(' ');
         titleRef.current.innerHTML = words
-          .map(word => `<span class="inline-block overflow-hidden"><span class="cta-word inline-block">${word}</span></span>`)
+          .map(word => `<span class="inline-block"><span class="cta-word inline-block">${word}</span></span>`)
           .join(' ');
 
         const wordSpans = titleRef.current.querySelectorAll('.cta-word');
