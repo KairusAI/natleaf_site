@@ -2,8 +2,6 @@ import { useRef, useLayoutEffect, useCallback } from "react";
 import { Linkedin, Github, Instagram } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import kairusLogo from "@/assets/LogoKairusVector.svg";
-import kairusLogoDark from "@/assets/LogoKairusVectorDark.svg";
 import { useTheme } from "@/hooks/use-theme";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -149,9 +147,9 @@ export function Footer() {
           >
             <a href="#" className="mb-4 block">
               <img 
-                src={resolvedTheme === "dark" ? kairusLogoDark : kairusLogo} 
-                alt="Kairus" 
-                className="h-28 w-auto"
+                src="/NATLEAF-LOGO.avif"
+                alt="NatLeaf"
+                className="h-16 w-auto"
               />
             </a>
             <p className="text-sm text-muted-foreground mb-6 max-w-xs">

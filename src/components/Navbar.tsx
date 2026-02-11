@@ -2,8 +2,6 @@ import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Menu, X } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import kairusLogo from "@/assets/LogoKairusVector.svg";
-import kairusLogoDark from "@/assets/LogoKairusVectorDark.svg";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTheme } from "@/hooks/use-theme";
 
@@ -230,7 +228,7 @@ export function Navbar() {
 
       {/* Header Container - Centraliza quando scrollado */}
       <div className={`fixed top-0 left-0 right-0 z-50 flex transition-all duration-500 ${
-        isScrolled ? "justify-center pt-3" : "justify-start"
+        isScrolled ? "justify-center pt-3" : "justify-start pt-4"
       }`}>
         <header
           ref={headerRef}
@@ -252,10 +250,10 @@ export function Navbar() {
           }`}>
             <a href="#" className="flex items-center">
               <img 
-                src={resolvedTheme === "dark" ? kairusLogoDark : kairusLogo} 
-                alt="Kairus" 
+                src="/NATLEAF-LOGO.avif"
+                alt="NatLeaf" 
                 className={`w-auto transition-all duration-500 ${
-                  isScrolled ? "h-12" : "h-24"
+                  isScrolled ? "h-8" : "h-12"
                 }`}
               />
             </a>

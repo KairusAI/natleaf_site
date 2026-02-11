@@ -4,7 +4,6 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import heroImage from "@/assets/LogoSimboloKairus3d.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,7 +25,6 @@ export function HeroSection() {
   const gridRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
-  const heroImageRef = useRef<HTMLDivElement>(null);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   
   const { scrollYProgress } = useScroll({
@@ -106,16 +104,6 @@ export function HeroSection() {
           delay: 2,
         });
       }
-
-      // Hero Image animation
-      if (heroImageRef.current) {
-        // Entrada mais elegante com blur e scale suave
-        tl.fromTo(heroImageRef.current,
-          { autoAlpha: 0, scale: 0.85, y: 30, filter: "blur(12px)" },
-          { autoAlpha: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 1.6, ease: "power3.out" },
-          "-=0.8"
-        );
-      }
     }, containerRef);
 
     return () => ctx.revert();
@@ -164,73 +152,10 @@ export function HeroSection() {
     };
   }, []);
 
-  // Efeito 3D Tilt Magnético na Imagem Hero
-  useEffect(() => {
-    const container = heroImageRef.current;
-    if (!container) return;
-
-    const img = container.querySelector('img');
-    if (!img) return;
-
-    // Configuração inicial de perspectiva
-    gsap.set(container, { perspective: 1000 });
-    
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      const width = rect.width;
-      const height = rect.height;
-      const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
-      
-      const xPct = mouseX / width - 0.5;
-      const yPct = mouseY / height - 0.5;
-
-      gsap.to(img, {
-        rotationY: xPct * 25,
-        rotationX: -yPct * 25,
-        ease: "power2.out",
-        duration: 0.5,
-        transformPerspective: 1000, 
-      });
-
-      // Move levemente o container também para efeito de profundidade
-      gsap.to(container, {
-        x: xPct * 20,
-        y: yPct * 20,
-        duration: 0.5,
-        ease: "power2.out"
-      });
-    };
-
-    const handleMouseLeave = () => {
-      gsap.to(img, {
-        rotationY: 0,
-        rotationX: 0,
-        ease: "power3.out",
-        duration: 1.2,
-      });
-      
-      gsap.to(container, {
-        x: 0,
-        y: 0,
-        duration: 1.2,
-        ease: "elastic.out(1, 0.3)"
-      });
-    };
-
-    container.addEventListener('mousemove', handleMouseMove);
-    container.addEventListener('mouseleave', handleMouseLeave);
-
-    return () => {
-      container.removeEventListener('mousemove', handleMouseMove);
-      container.removeEventListener('mouseleave', handleMouseLeave);
-    };
-  }, []);
-
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
+      className="relative min-h-screen flex items-center justify-center overflow-visible bg-background"
     >
       {/* Ambient Glow Background */}
       <div 
@@ -253,13 +178,25 @@ export function HeroSection() {
         }}
       />
 
+      {/* Imagem das embalagens no fundo (metade direita da hero) */}
+      <div
+        className="absolute inset-0 hidden lg:block pointer-events-none z-[1]"
+        style={{
+          left: "50%",
+          backgroundImage: "url(/embalagens%20NatLeaf.svg)",
+          backgroundSize: "320% auto",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+        }}
+        aria-hidden
+      />
+
       <motion.div
         style={{ y, opacity, scale }}
-        className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-20 sm:py-24 md:py-32 relative z-10 pointer-events-none"
+        className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-20 sm:py-24 md:py-32 relative z-10 pointer-events-none overflow-visible"
       >
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Left Content */}
-          <div className="max-w-4xl text-center sm:text-left pointer-events-auto">
+        <div className="flex flex-col items-center lg:items-start">
+          <div className="max-w-4xl w-full text-center lg:text-left pointer-events-auto">
             {/* Headline */}
             <h1
               ref={headlineRef}
@@ -294,7 +231,7 @@ export function HeroSection() {
             {/* Subheadline */}
             <p
               ref={subheadlineRef}
-              className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl sm:max-w-2xl mx-auto sm:mx-0 mb-8 sm:mb-10 leading-relaxed gsap-hidden"
+              className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl sm:max-w-2xl mx-auto lg:mx-0 mb-8 sm:mb-10 leading-relaxed gsap-hidden"
             >
               Automação e inteligência artificial sob medida para resolver problemas reais do seu negócio, do jeito certo, pensado para o seu momento.
             </p>
@@ -302,7 +239,7 @@ export function HeroSection() {
             {/* CTAs */}
             <div
               ref={ctaRef}
-              className="flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-3 sm:gap-4 pointer-events-auto"
+              className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3 sm:gap-4 pointer-events-auto"
             >
               <Button 
                 size="lg" 
@@ -337,28 +274,6 @@ export function HeroSection() {
                 <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </div>
-          </div>
-
-          {/* Right Content - Hero Image */}
-          <div 
-            ref={heroImageRef}
-            className="relative hidden lg:flex items-center justify-center gsap-hidden pointer-events-auto"
-          >
-            {/* Glow effect behind image */}
-            <div 
-              className="absolute inset-0 blur-3xl opacity-15"
-              style={{
-                background: "radial-gradient(ellipse at center, hsl(210 95% 60% / 0.20) 0%, transparent 70%)",
-              }}
-            />
-            <img 
-              src={heroImage} 
-              alt="Kairus Symbol" 
-              className="relative w-full max-w-md xl:max-w-lg drop-shadow-2xl"
-              style={{
-                filter: "drop-shadow(0 20px 40px rgba(59, 130, 246, 0.05))",
-              }}
-            />
           </div>
         </div>
       </motion.div>
