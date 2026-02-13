@@ -187,6 +187,21 @@ export function ProcessSection() {
       className="relative py-24 md:py-32 bg-background overflow-hidden" 
       ref={containerRef}
     >
+      {/* Imagem folha no fundo (metade esquerda, invertida) */}
+      <div
+        className="absolute inset-0 hidden lg:block pointer-events-none z-[1]"
+        style={{
+          right: "70%",
+          left: 0,
+          backgroundImage: "url(/imagemfolha2.svg)",
+          backgroundSize: "130% auto",
+          backgroundPosition: "100% 25%",
+          backgroundRepeat: "no-repeat",
+          transform: "scaleX(-1)",
+        }}
+        aria-hidden
+      />
+
       <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
         {/* Header */}
         <div
