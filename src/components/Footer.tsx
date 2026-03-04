@@ -1,240 +1,131 @@
-import { useRef, useLayoutEffect, useCallback } from "react";
-import { Linkedin, Github, Instagram } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useTheme } from "@/hooks/use-theme";
-
-gsap.registerPlugin(ScrollTrigger);
+import { Link } from "react-router-dom";
+import { Phone, Mail, MapPin, Instagram, Facebook, MessageCircle } from "lucide-react";
 
 const footerLinks = {
-  company: [
-    { name: "Sobre nós", href: "#about" },
-    { name: "Carreiras", href: "#" },
-    { name: "Blog", href: "#" },
-    { name: "Contato", href: "#contact" },
+  produtos: [
+    { name: "Natleaf Wellness", href: "/produtos/wellness" },
+    { name: "Natleaf Brain", href: "/produtos/brain" },
+    { name: "Natleaf Sleep", href: "/produtos/sleep" },
+    { name: "Ver todos os produtos", href: "/produtos" },
   ],
-  services: [
-    { name: "Inteligência Artificial", href: "#services" },
-    { name: "Automação", href: "#services" },
-    { name: "Desenvolvimento", href: "#services" },
-    { name: "Consultoria", href: "#services" },
+  institucional: [
+    { name: "Quem Somos", href: "/quem-somos" },
+    { name: "Conheça o CBD", href: "/conheca-o-cbd" },
+    { name: "Para Médicos", href: "/para-medicos" },
+    { name: "Blog", href: "/blog" },
   ],
-  legal: [
-    { name: "Privacidade", href: "#" },
-    { name: "Termos", href: "#" },
-    { name: "Cookies", href: "#" },
+  suporte: [
+    { name: "Contato", href: "/contato" },
+    { name: "Processo de Compra", href: "/conheca-o-cbd#como-adquirir" },
+    { name: "Autorização ANVISA", href: "/conheca-o-cbd#como-adquirir" },
+    { name: "WhatsApp", href: "https://wa.me/5521975190000" },
   ],
 };
 
-const socialLinks = [
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
-  { icon: Github, href: "#", label: "GitHub" },
-  { icon: Instagram, href: "#", label: "Instagram" },
-];
-
 export function Footer() {
-  const { resolvedTheme } = useTheme();
-  const footerRef = useRef<HTMLElement>(null);
-  const columnsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const socialRef = useRef<(HTMLAnchorElement | null)[]>([]);
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      // Columns stagger animation (filter null refs)
-      const cols = Array.isArray(columnsRef.current)
-        ? columnsRef.current.filter(Boolean)
-        : columnsRef.current;
-      gsap.fromTo(cols,
-        { 
-          y: 50, 
-          autoAlpha: 0 
-        },
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 0.6,
-          stagger: 0.15,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: "top 90%",
-            once: true,
-          }
-        }
-      );
-
-      // Social icons bounce in (filter null refs)
-      const socials = Array.isArray(socialRef.current)
-        ? socialRef.current.filter(Boolean)
-        : socialRef.current;
-      gsap.fromTo(socials,
-        { 
-          scale: 0,
-          rotation: -180,
-          autoAlpha: 0 
-        },
-        {
-          scale: 1,
-          rotation: 0,
-          autoAlpha: 1,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: "back.out(1.7)",
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: "top 85%",
-            once: true,
-          },
-          delay: 0.3
-        }
-      );
-
-      // Bottom line reveal
-      gsap.fromTo(bottomRef.current,
-        { 
-          autoAlpha: 0,
-          y: 20
-        },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.5,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: "top 80%",
-            once: true,
-          },
-          delay: 0.5
-        }
-      );
-    }, footerRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  // Social icon hover handlers - separate from GSAP context for proper cleanup
-  const handleSocialEnter = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-    gsap.to(e.currentTarget, {
-      scale: 1.2,
-      y: -3,
-      duration: 0.3,
-      ease: "power2.out"
-    });
-  }, []);
-
-  const handleSocialLeave = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-    gsap.to(e.currentTarget, {
-      scale: 1,
-      y: 0,
-      duration: 0.3,
-      ease: "power2.out"
-    });
-  }, []);
-
   return (
-    <footer 
-      ref={footerRef}
-      className="py-16 bg-secondary/30 border-t border-border"
-    >
-      <div className="container mx-auto px-6 md:px-8 lg:px-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+    <footer className="bg-secondary/20 border-t border-border">
+      <div className="container mx-auto px-6 md:px-8 lg:px-12 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
           {/* Brand */}
-          <div 
-            ref={(el) => { columnsRef.current[0] = el; }}
-            className="col-span-2 md:col-span-1"
-          >
-            <a href="#" className="mb-4 block">
-              <img 
-                src="/NATLEAF-LOGO.avif"
-                alt="NatLeaf"
-                className="h-16 w-auto"
-              />
-            </a>
-            <p className="text-sm text-muted-foreground mb-6 max-w-xs">
-              Transformando o futuro através da tecnologia e inovação.
+          <div className="lg:col-span-2">
+            <Link to="/" className="mb-5 block">
+              <img src="/NATLEAF-LOGO.avif" alt="Natleaf" className="h-12 w-auto" />
+            </Link>
+            <p className="text-sm text-muted-foreground mb-2 font-medium italic">
+              "Elevating Your Health"
             </p>
-            <div className="flex gap-3">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={social.label}
-                  ref={(el) => { socialRef.current[index] = el; }}
-                  href={social.href}
-                  className="w-9 h-9 rounded-lg bg-background border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors cursor-hover"
-                  aria-label={social.label}
-                  onMouseEnter={handleSocialEnter}
-                  onMouseLeave={handleSocialLeave}
-                >
-                  <social.icon className="w-4 h-4" />
-                </a>
-              ))}
+            <p className="text-sm text-muted-foreground mb-6 max-w-xs leading-relaxed">
+              Principal produto da Invented Green LLC — empresa americana dedicada à medicina fitoterápica de alta qualidade.
+            </p>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <a href="tel:+5521975190000" className="flex items-center gap-2 hover:text-primary transition-colors">
+                <Phone className="w-4 h-4 shrink-0" />
+                +55 21 97519-0000
+              </a>
+              <a href="mailto:hello@inventedgreen.com.br" className="flex items-center gap-2 hover:text-primary transition-colors">
+                <Mail className="w-4 h-4 shrink-0" />
+                hello@inventedgreen.com.br
+              </a>
+              <span className="flex items-start gap-2">
+                <MapPin className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>7345 W Sand Lake Rd, Ste 210 — Orlando, FL 32819 — USA</span>
+              </span>
             </div>
           </div>
 
-          {/* Company */}
-          <div ref={(el) => { columnsRef.current[1] = el; }}>
-            <h4 className="text-sm font-medium text-foreground mb-4">Empresa</h4>
+          {/* Produtos */}
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-4">Produtos</h4>
             <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
+              {footerLinks.produtos.map((link) => (
                 <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors hover:translate-x-1 inline-block"
-                  >
+                  <Link to={link.href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                     {link.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Services */}
-          <div ref={(el) => { columnsRef.current[2] = el; }}>
-            <h4 className="text-sm font-medium text-foreground mb-4">Serviços</h4>
+          {/* Institucional */}
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-4">Institucional</h4>
             <ul className="space-y-3">
-              {footerLinks.services.map((link) => (
+              {footerLinks.institucional.map((link) => (
                 <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors hover:translate-x-1 inline-block"
-                  >
+                  <Link to={link.href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                     {link.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Legal */}
-          <div ref={(el) => { columnsRef.current[3] = el; }}>
-            <h4 className="text-sm font-medium text-foreground mb-4">Legal</h4>
+          {/* Suporte */}
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-4">Suporte</h4>
             <ul className="space-y-3">
-              {footerLinks.legal.map((link) => (
+              {footerLinks.suporte.map((link) => (
                 <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors hover:translate-x-1 inline-block"
-                  >
-                    {link.name}
-                  </a>
+                  {link.href.startsWith("http") ? (
+                    <a href={link.href} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      {link.name}
+                    </a>
+                  ) : (
+                    <Link to={link.href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      {link.name}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
+        {/* Legal disclaimer */}
+        <div className="mb-8 p-4 rounded-xl bg-muted/40 border border-border/50">
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            <strong className="text-foreground/70">Aviso legal:</strong> Os produtos Natleaf não foram avaliados pela ANVISA para diagnóstico, tratamento, cura ou prevenção de doenças. A comercialização no Brasil requer receita médica e autorização de importação da ANVISA. Consulte sempre um médico antes de iniciar qualquer tratamento.
+          </p>
+        </div>
+
         {/* Bottom */}
-        <div 
-          ref={bottomRef}
-          className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4"
-        >
+        <div className="pt-6 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Kairus. Todos os direitos reservados.
+            © {new Date().getFullYear()} Natleaf · Invented Green, LLC. Todos os direitos reservados.
           </p>
-          <p className="text-sm text-muted-foreground">
-            Feito com precisão no Brasil
-          </p>
+          <div className="flex items-center gap-4">
+            <a href="https://wa.me/5521975190000" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" aria-label="WhatsApp">
+              <MessageCircle className="w-5 h-5" />
+            </a>
+            <a href="https://instagram.com/natleaf" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram">
+              <Instagram className="w-5 h-5" />
+            </a>
+            <a href="https://facebook.com/natleaf" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Facebook">
+              <Facebook className="w-5 h-5" />
+            </a>
+          </div>
         </div>
       </div>
     </footer>

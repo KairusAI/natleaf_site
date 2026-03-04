@@ -1,35 +1,25 @@
 import { Navbar } from "@/components/Navbar";
-import { HeroSection } from "@/components/HeroSection";
-import { ProblemSection } from "@/components/ProblemSection";
-import { SolutionSection } from "@/components/SolutionSection";
-import { ServicesSection } from "@/components/ServicesSection";
-import { ProcessSection } from "@/components/ProcessSection";
-import { WhyKairusSection } from "@/components/WhyKairusSection";
-import { UseCasesSection } from "@/components/UseCasesSection";
-import { ProjectsSection } from "@/components/ProjectsSection";
-import { TestimonialsSection } from "@/components/TestimonialsSection";
-import { CTASection } from "@/components/CTASection";
 import { Footer } from "@/components/Footer";
-// import { useSmoothScroll } from "@/hooks/use-smooth-scroll";
+import { HeroSection } from "@/components/home/HeroSection";
+import { ProductsHighlight } from "@/components/home/ProductsHighlight";
+import { DifferentialsSection } from "@/components/home/DifferentialsSection";
+import { SpectrumComparison } from "@/components/home/SpectrumComparison";
+import { HowItWorks } from "@/components/home/HowItWorks";
+import { AboutBrief } from "@/components/home/AboutBrief";
+import { NewsletterSection } from "@/components/home/NewsletterSection";
 
 const Index = () => {
-  // Temporarily disabled for debugging - uncomment to re-enable smooth scroll
-  // useSmoothScroll();
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <main>
         <HeroSection />
-        <ProblemSection />
-        <SolutionSection />
-        <ServicesSection />
-        <ProcessSection />
-        <WhyKairusSection />
-        <UseCasesSection />
-        <ProjectsSection />
-        <TestimonialsSection />
-        <CTASection />
+        <ProductsHighlight />
+        <DifferentialsSection />
+        <SpectrumComparison />
+        <HowItWorks />
+        <AboutBrief />
+        <NewsletterSection />
       </main>
       <Footer />
     </div>
@@ -37,3 +27,4 @@ const Index = () => {
 };
 
 export default Index;
+
