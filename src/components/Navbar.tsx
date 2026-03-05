@@ -19,8 +19,11 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const prevScrolled = useRef(false);
 
-  const headerRef = useRef<HTMLDivElement>(null);
+  const outerRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLDivElement>(null);
+  const logoRef = useRef<HTMLImageElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileLinksRef = useRef<HTMLDivElement>(null);
@@ -42,10 +45,11 @@ export function Navbar() {
     setMobileOpen(false);
   }, [location]);
 
+  // Entry animation
   useGSAP(() => {
-    if (!headerRef.current) return;
+    if (!outerRef.current) return;
     gsap.fromTo(
-      headerRef.current,
+      outerRef.current,
       { y: -80, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.2 }
     );
@@ -56,6 +60,49 @@ export function Navbar() {
     );
   }, []);
 
+  // Scroll state transition — fully GSAP driven, no CSS transition conflicts
+  useEffect(() => {
+    if (!outerRef.current || !pillRef.current) return;
+    if (prevScrolled.current === scrolled) return;
+    prevScrolled.current = scrolled;
+
+    const dur = 0.6;
+    const ease = "power3.inOut";
+
+    if (scrolled) {
+      gsap.to(outerRef.current, {
+        paddingTop: 16, paddingLeft: 16, paddingRight: 16,
+        duration: dur, ease,
+      });
+      gsap.to(pillRef.current, {
+        borderRadius: 9999,
+        boxShadow: "0 4px 24px rgba(0,0,0,0.10)",
+        backgroundColor: "rgba(255,255,255,0.70)",
+        paddingTop: 10, paddingBottom: 10,
+        duration: dur, ease,
+      });
+      if (logoRef.current) {
+        gsap.to(logoRef.current, { height: 28, duration: dur * 0.85, ease });
+      }
+    } else {
+      gsap.to(outerRef.current, {
+        paddingTop: 0, paddingLeft: 0, paddingRight: 0,
+        duration: dur, ease,
+      });
+      gsap.to(pillRef.current, {
+        borderRadius: 0,
+        boxShadow: "none",
+        backgroundColor: "rgba(255,255,255,0.97)",
+        paddingTop: 16, paddingBottom: 16,
+        duration: dur, ease,
+      });
+      if (logoRef.current) {
+        gsap.to(logoRef.current, { height: 40, duration: dur * 0.85, ease });
+      }
+    }
+  }, [scrolled]);
+
+  // Mobile menu animation
   useEffect(() => {
     if (!mobileMenuRef.current || !mobileLinksRef.current) return;
     if (mobileOpen) {
@@ -85,73 +132,70 @@ export function Navbar() {
         <div ref={progressRef} className="h-full bg-primary transition-none" style={{ width: "0%" }} />
       </div>
 
-      <div
-        className={cn(
-          "fixed z-50 transition-all duration-500",
-          scrolled ? "top-4 left-1/2 -translate-x-1/2 w-fit" : "top-0 left-0 right-0"
-        )}
-      >
-        <div ref={headerRef}>
-          <div
-            className={cn(
-              "flex items-center gap-6 transition-all duration-500",
-              scrolled
-                ? "w-fit rounded-full border border-border/40 bg-white/80 backdrop-blur-xl shadow-md px-6 py-3"
-                : "px-6 md:px-12 py-4 bg-white/95 backdrop-blur-sm border-b border-border/20 w-screen justify-between"
-            )}
-          >
-            {/* Logo */}
-            <Link to="/" className="flex items-center shrink-0">
-              <img
-                src="/NATLEAF-LOGO.avif"
-                alt="Natleaf"
-                className={cn("transition-all duration-300 object-contain", scrolled ? "h-7" : "h-10")}
-              />
-            </Link>
+      {/* Outer wrapper: always full-width fixed strip; GSAP animates padding to create pill inset */}
+      <div ref={outerRef} className="fixed top-0 left-0 right-0 z-50">
+        {/* Pill bar: GSAP animates borderRadius, bg, shadow, vertical padding */}
+        <div
+          ref={pillRef}
+          className={cn(
+            "flex items-center gap-6 backdrop-blur-xl border-border/40",
+            scrolled ? "px-6 justify-between border" : "px-6 md:px-12 justify-between border-b"
+          )}
+          style={{ backgroundColor: "rgba(255,255,255,0.97)", paddingTop: 16, paddingBottom: 16 }}
+        >
+          {/* Logo */}
+          <Link to="/" className="flex items-center shrink-0">
+            <img
+              ref={logoRef}
+              src="/NATLEAF-LOGO.avif"
+              alt="Natleaf"
+              className="object-contain"
+              style={{ height: 40 }}
+            />
+          </Link>
 
-            {/* Desktop nav */}
-            <nav className={cn("hidden md:flex items-center gap-1", !scrolled && "flex-1 justify-center")}>
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className={cn(
-                    "nav-link-item relative px-3 py-1.5 text-sm font-medium rounded-lg transition-colors duration-200",
-                    isActive(link.href)
-                      ? "text-primary bg-primary/8"
-                      : "text-foreground/70 hover:text-foreground hover:bg-muted/60"
-                  )}
-                  onMouseEnter={(e) => handleNavHover(e.currentTarget, true)}
-                  onMouseLeave={(e) => handleNavHover(e.currentTarget, false)}
-                >
-                  {link.label}
-                  {isActive(link.href) && (
-                    <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
-                  )}
-                </Link>
-              ))}
-            </nav>
+          {/* Desktop nav */}
+          <nav className={cn("hidden md:flex items-center gap-1", !scrolled && "flex-1 justify-center")}>
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                className={cn(
+                  "nav-link-item relative px-3 py-1.5 text-sm font-medium rounded-lg transition-colors duration-200",
+                  isActive(link.href)
+                    ? "text-primary bg-primary/8"
+                    : "text-foreground/70 hover:text-foreground hover:bg-muted/60"
+                )}
+                onMouseEnter={(e) => handleNavHover(e.currentTarget, true)}
+                onMouseLeave={(e) => handleNavHover(e.currentTarget, false)}
+              >
+                {link.label}
+                {isActive(link.href) && (
+                  <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+                )}
+              </Link>
+            ))}
+          </nav>
 
-            {/* CTA + mobile toggle */}
-            <div className="flex items-center gap-3 shrink-0">
-              <a
-                href="https://wa.me/5521975190000"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden md:block"
-              >
-                <Button size="sm" className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 text-sm px-5">
-                  Adquirir
-                </Button>
-              </a>
-              <button
-                className="md:hidden p-2 rounded-lg text-foreground/70 hover:text-foreground hover:bg-muted/60 transition-colors"
-                onClick={() => setMobileOpen((v) => !v)}
-                aria-label="Toggle menu"
-              >
-                {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
-            </div>
+          {/* CTA + mobile toggle */}
+          <div className="flex items-center gap-3 shrink-0">
+            <a
+              href="https://wa.me/5521975190000"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:block"
+            >
+              <Button size="sm" className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 text-sm px-5">
+                Adquirir
+              </Button>
+            </a>
+            <button
+              className="md:hidden p-2 rounded-lg text-foreground/70 hover:text-foreground hover:bg-muted/60 transition-colors"
+              onClick={() => setMobileOpen((v) => !v)}
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
 

@@ -30,7 +30,7 @@ export default function ProdutoWellness() {
         { label: "COA", value: "Disponível para download" },
       ]}
       coaUrl="/docs/COA%20Natleaf%20Wellness.pdf"
-      productImage="/assets/wellness.avif"
+      productImage="/assets/wellness.png"
     />
   );
 }

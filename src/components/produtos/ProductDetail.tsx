@@ -101,7 +101,7 @@ export function ProductDetail({
             {/* Right column: image + specs */}
             <div className="flex flex-col gap-6">
               {productImage && (
-                <div className={`relative flex items-center justify-center rounded-3xl ${c.bg} p-8 overflow-hidden`}>
+                <div className={`relative flex items-center justify-center rounded-3xl p-8 overflow-hidden`}>
                   <div
                     className="absolute inset-0 opacity-20"
                     style={{
@@ -111,7 +111,7 @@ export function ProductDetail({
                   <img
                     src={productImage}
                     alt={name}
-                    className="relative z-10 w-56 h-56 md:w-72 md:h-72 object-contain drop-shadow-xl"
+                    className="relative z-10 w-16 h-16 md:w-24 md:h-24 object-contain drop-shadow-xl"
                   />
                 </div>
               )}

@@ -59,7 +59,20 @@ export default function QuemSomos() {
   return (
     <PageLayout>
       {/* Hero */}
-      <section className="py-24 bg-gradient-to-br from-background to-primary/5">
+      <section className="relative py-24 bg-gradient-to-br from-background to-primary/5 overflow-hidden">
+        {/* Leaf decoration */}
+        <img
+          src="/imagemfolha.svg"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none select-none absolute -right-24 -top-10 w-[520px] -rotate-45"
+        />
+        <img
+          src="/imagemfolha2.svg"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none select-none absolute -left-20 bottom-0 w-[340px] -rotate-90"
+        />
         <div className="container mx-auto px-6 md:px-8 lg:px-12">
           <div className="max-w-3xl">
             <span className="text-sm font-medium text-primary tracking-wide uppercase">Quem Somos</span>
@@ -78,7 +91,13 @@ export default function QuemSomos() {
       </section>
 
       {/* Commitment */}
-      <section className="py-20 bg-secondary/20">
+      <section className="relative py-20 bg-secondary/20 overflow-hidden">
+        <img
+          src="/imagemfolha.svg"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none select-none absolute -left-16 top-1/2 -translate-y-1/2 w-[380px] opacity-[0.06] -rotate-6"
+        />
         <div className="container mx-auto px-6 md:px-8 lg:px-12">
           <div className="max-w-3xl mx-auto text-center mb-12">
             <span className="text-sm font-medium text-primary tracking-wide uppercase">Nosso Compromisso</span>
@@ -169,7 +188,19 @@ export default function QuemSomos() {
       </section>
 
       {/* Certifications */}
-      <section className="py-20 bg-background">
+      <section className="relative py-20 bg-background overflow-hidden">
+        <img
+          src="/imagemfolha.svg"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none select-none absolute -right-20 top-1/2 -translate-y-1/2 w-[460px] opacity-[0.055] -rotate-6"
+        />
+        <img
+          src="/imagemfolha2.svg"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none select-none absolute -left-16 bottom-0 w-[280px] opacity-[0.05] rotate-12"
+        />
         <div className="container mx-auto px-6 md:px-8 lg:px-12">
           <div className="text-center mb-12">
             <span className="text-sm font-medium text-primary tracking-wide uppercase">Qualidade</span>

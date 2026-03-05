@@ -30,7 +30,7 @@ export default function ProdutoBrain() {
         { label: "COA", value: "Disponível para download" },
       ]}
       coaUrl="/docs/COA%20Natleaf%20Brain.pdf"
-      productImage="/assets/brain.avif"
+      productImage="/assets/brain.png"
     />
   );
 }

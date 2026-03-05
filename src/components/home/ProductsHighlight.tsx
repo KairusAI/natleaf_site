@@ -6,7 +6,7 @@ const products = [
   {
     href: "/produtos/wellness",
     icon: Leaf,
-    image: "/assets/wellness.avif",
+    image: "/assets/wellness.png",
     name: "Natleaf Wellness",
     focus: "Bem-estar geral e equilíbrio diário",
     formula: "Whole Spectrum CBD",
@@ -18,7 +18,7 @@ const products = [
   {
     href: "/produtos/brain",
     icon: Brain,
-    image: "/assets/brain.avif",
+    image: "/assets/brain.png",
     name: "Natleaf Brain",
     focus: "Concentração, clareza mental e cognição",
     formula: "CBD + CBG (Canabigerol)",
@@ -30,7 +30,7 @@ const products = [
   {
     href: "/produtos/sleep",
     icon: Moon,
-    image: "/assets/sleep.avif",
+    image: "/assets/sleep.png",
     name: "Natleaf Sleep",
     focus: "Qualidade do sono e descanso profundo",
     formula: "CBD + CBN + Melatonina (6mg)",
@@ -68,7 +68,7 @@ export function ProductsHighlight() {
                   <img
                     src={p.image}
                     alt={p.name}
-                    className="w-32 h-32 object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+                    className="w-16 h-16 object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
 
