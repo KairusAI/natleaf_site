@@ -32,7 +32,7 @@ export default function ProdutoSleep() {
         { label: "COA", value: "Disponível para download" },
       ]}
       coaUrl="/docs/COA%20Natleaf%20Sleep.pdf"
-      productImage="/assets/sleep.png"
+      productImage="/assets/sleep.avif"
       note="Aviso legal: Essas declarações não foram avaliadas pela Agência Nacional de Vigilância Sanitária (ANVISA). Este produto não se destina a diagnosticar, tratar, curar ou prevenir qualquer doença. Não usar se o selo de segurança estiver violado. Consulte sempre um médico antes de iniciar o uso."
     />
   );

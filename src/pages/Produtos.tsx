@@ -578,7 +578,7 @@ export default function Produtos() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-x-auto rounded-2xl border border-border/40 bg-card"
+            className="overflow-x-auto overflow-y-hidden rounded-2xl border border-border/40 bg-card"
           >
             <table className="w-full min-w-[540px]">
               <thead>
