@@ -153,7 +153,7 @@ export function Footer() {
               />
             </a>
             <p className="text-sm text-muted-foreground mb-6 max-w-xs">
-              Transformando o futuro através da tecnologia e inovação.
+              Apoio completo para pacientes que buscam tratamento com cannabis medicinal no Brasil. Cuidamos da burocracia para que você cuide da sua saúde.
             </p>
             <div className="flex gap-3">
               {socialLinks.map((social, index) => (
@@ -230,10 +230,10 @@ export function Footer() {
           className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4"
         >
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Kairus. Todos os direitos reservados.
+            © {new Date().getFullYear()} Natleaf. Todos os direitos reservados.
           </p>
           <p className="text-sm text-muted-foreground">
-            Feito com precisão no Brasil
+            As informações deste site são informativas e não substituem a consulta médica. O uso de cannabis medicinal deve ser sempre acompanhado por um profissional habilitado.
           </p>
         </div>
       </div>

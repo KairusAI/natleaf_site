@@ -1,5 +1,5 @@
 import { useRef, useLayoutEffect, useState } from "react";
-import { Search, PenTool, Code, Rocket } from "lucide-react";
+import { ClipboardCheck, Stethoscope, FileCheck, ShieldCheck, Heart } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -7,28 +7,34 @@ gsap.registerPlugin(ScrollTrigger);
 
 const steps = [
   {
-    icon: Search,
+    icon: ClipboardCheck,
     number: "01",
-    title: "Diagnóstico",
-    description: "Entendemos seu negócio, seus gargalos e objetivos.",
+    title: "Avaliação",
+    description: "Análise do seu caso e verificação de elegibilidade para o tratamento.",
   },
   {
-    icon: PenTool,
+    icon: Stethoscope,
     number: "02",
-    title: "Arquitetura da solução",
-    description: "Desenhamos o sistema ideal usando IA e automação.",
+    title: "Apoio médico",
+    description: "Suporte completo ao seu médico para indicar e prescrever com segurança.",
   },
   {
-    icon: Code,
+    icon: FileCheck,
     number: "03",
-    title: "Desenvolvimento",
-    description: "Construímos, testamos e ajustamos cada detalhe.",
+    title: "Documentação",
+    description: "Nós montamos e protocolamos todos os documentos na ANVISA por você.",
   },
   {
-    icon: Rocket,
+    icon: ShieldCheck,
     number: "04",
-    title: "Entrega e evolução",
-    description: "Colocamos no ar e seguimos evoluindo junto com você.",
+    title: "Autorização",
+    description: "Acompanhamos o processo até a autorização de importação ser emitida.",
+  },
+  {
+    icon: Heart,
+    number: "05",
+    title: "Tratamento",
+    description: "Produto entregue. Tratamento iniciado. Você cuida de si mesmo.",
   },
 ];
 
@@ -209,28 +215,30 @@ export function ProcessSection() {
           className="text-center max-w-3xl mx-auto mb-20"
         >
           <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block gsap-hidden">
-            Como Funciona
+            Processo
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 gsap-hidden">
-            Simples, transparente e{" "}
-            <span className="text-primary">focado em resultado</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-4 gsap-hidden">
+            Da dúvida ao <span className="text-primary">tratamento</span>: cada etapa com você.
           </h2>
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto gsap-hidden">
+            Acompanhamos você do início ao fim, sem que você precise entender de burocracia, legislação ou importação.
+          </p>
         </div>
 
         {/* Timeline Container */}
-        <div ref={timelineRef} className="relative max-w-5xl mx-auto w-full">
+        <div ref={timelineRef} className="relative max-w-6xl mx-auto w-full">
           {/* Timeline Base Line */}
-          <div className="absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-muted/30 hidden md:block" />
+          <div className="absolute top-10 left-[12.5%] right-[12.5%] h-0.5 bg-muted/30 hidden md:block" />
           
           {/* Timeline Progress Line */}
           <div 
             ref={progressLineRef}
-            className="absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-primary hidden md:block"
+            className="absolute top-10 left-[12.5%] right-[12.5%] h-0.5 bg-primary hidden md:block"
             style={{ transformOrigin: "left center" }}
           />
 
           {/* Timeline Steps */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-14 md:gap-6">
             {steps.map((step, index) => (
               <div
                 key={step.title}
@@ -238,8 +246,8 @@ export function ProcessSection() {
                 className="relative flex flex-col items-center text-center"
               >
                 {/* Dot */}
-                <div className="timeline-dot w-16 h-16 rounded-full bg-muted border-4 border-background shadow-lg flex items-center justify-center mb-6 relative z-10 transition-colors duration-300 [&.active]:bg-primary">
-                  <step.icon className="step-icon w-6 h-6 text-primary [.timeline-dot.active_&]:text-primary-foreground transition-colors duration-300" />
+                <div className="timeline-dot w-20 h-20 rounded-full bg-muted border-4 border-background shadow-lg flex items-center justify-center mb-8 relative z-10 transition-colors duration-300 [&.active]:bg-primary">
+                  <step.icon className="step-icon w-8 h-8 text-primary [.timeline-dot.active_&]:text-primary-foreground transition-colors duration-300" />
                 </div>
 
                 {/* Content */}
@@ -248,17 +256,17 @@ export function ProcessSection() {
                   className="flex flex-col items-center"
                 >
                   {/* Number Badge */}
-                  <span className="step-badge text-xs font-bold text-primary/60 mb-2">
+                  <span className="step-badge text-sm font-bold text-primary/60 mb-3">
                     PASSO {step.number}
                   </span>
 
                   {/* Title */}
-                  <h3 className="step-title text-lg font-semibold text-foreground mb-3">
+                  <h3 className="step-title text-xl font-semibold text-foreground mb-3">
                     {step.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="step-description text-sm text-muted-foreground leading-relaxed max-w-[220px]">
+                  <p className="step-description text-base text-muted-foreground leading-relaxed max-w-[280px]">
                     {step.description}
                   </p>
                 </div>

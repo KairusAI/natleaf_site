@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 // Store original title text to prevent innerHTML corruption
-const ORIGINAL_TITLE = "Pronto para transformar sua operação?";
+const ORIGINAL_TITLE = "Pronto para dar o primeiro passo?";
 
 export function CTASection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -255,7 +255,7 @@ export function CTASection() {
               ref={subtitleRef}
               className="text-lg text-primary-foreground/80 mb-10 max-w-xl mx-auto gsap-hidden"
             >
-              Vamos desenhar juntos uma solução inteligente para o seu negócio.
+              Entre em contato com a Natleaf hoje. Nossa equipe vai avaliar seu caso, esclarecer todas as dúvidas e te mostrar como começar — sem complicação.
             </p>
 
             <div ref={buttonRef}>
@@ -268,7 +268,7 @@ export function CTASection() {
                 onMouseMove={handleButtonMove}
                 onClick={() => window.open('https://wa.me/5521971201512?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20uma%20reuni%C3%A3o.', '_blank')}
               >
-                Agendar reunião
+                Falar com a equipe Natleaf
                 <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-2 duration-300" />
               </Button>
             </div>

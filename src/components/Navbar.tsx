@@ -8,11 +8,11 @@ import { useTheme } from "@/hooks/use-theme";
 gsap.registerPlugin(ScrollTrigger);
 
 const navLinks = [
-  { name: "Serviços", href: "#services" },
-  { name: "Sobre", href: "#about" },
-  { name: "Projetos", href: "#projects" },
-  { name: "Depoimentos", href: "#testimonials" },
-  { name: "Contato", href: "#contact" },
+  { name: "No Brasil", href: "#problem" },
+  { name: "O que é CBD", href: "#solution" },
+  { name: "Para médicos", href: "#services" },
+  { name: "Como funciona", href: "#process" },
+  { name: "Começar agora", href: "#contact", cta: true },
 ];
 
 export function Navbar() {
@@ -264,20 +264,27 @@ export function Navbar() {
             }`}>
               {navLinks.map((link, index) => {
                 const isActive = activeSection === link.href;
+                const isCta = "cta" in link && link.cta;
                 return (
                   <a
                     key={link.name}
                     ref={(el) => { navLinksRef.current[index] = el; }}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className={`relative transition-colors duration-200 group cursor-pointer cursor-hover ${
-                      isScrolled ? "text-sm" : "text-base"
-                    } ${
-                      isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
-                    }`}
+                    className={
+                      isCta
+                        ? `relative transition-colors duration-200 cursor-pointer rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 ${
+                            isScrolled ? "text-sm" : "text-base"
+                          } font-medium`
+                        : `relative transition-colors duration-200 group cursor-pointer cursor-hover ${
+                            isScrolled ? "text-sm" : "text-base"
+                          } ${
+                            isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
+                          }`
+                    }
                     onMouseEnter={(e) => {
                       gsap.to(e.currentTarget, {
-                        y: -2,
+                        y: isCta ? -2 : -2,
                         duration: 0.2,
                         ease: "power2.out"
                       });
@@ -291,9 +298,11 @@ export function Navbar() {
                     }}
                   >
                     {link.name}
-                    <span className={`absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300 ease-out ${
-                      isActive ? "w-full" : "w-0 group-hover:w-full"
-                    }`}></span>
+                    {!isCta && (
+                      <span className={`absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300 ease-out ${
+                        isActive ? "w-full" : "w-0 group-hover:w-full"
+                      }`}></span>
+                    )}
                   </a>
                 );
               })}
@@ -337,19 +346,26 @@ export function Navbar() {
           <div className="px-6 py-4 flex flex-col gap-4">
             {navLinks.map((link) => {
               const isActive = activeSection === link.href;
+              const isCta = "cta" in link && link.cta;
               return (
                 <a
                   key={link.name}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className={`relative text-base transition-colors py-2 group cursor-pointer ${
-                    isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
-                  }`}
+                  className={
+                    isCta
+                      ? "rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 text-base font-medium text-center transition-colors cursor-pointer"
+                      : `relative text-base transition-colors py-2 group cursor-pointer ${
+                          isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
+                        }`
+                  }
                 >
                   {link.name}
-                  <span className={`absolute bottom-2 left-0 h-0.5 bg-primary transition-all duration-300 ease-out ${
-                    isActive ? "w-full" : "w-0 group-hover:w-full"
-                  }`}></span>
+                  {!isCta && (
+                    <span className={`absolute bottom-2 left-0 h-0.5 bg-primary transition-all duration-300 ease-out ${
+                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                    }`}></span>
+                  )}
                 </a>
               );
             })}

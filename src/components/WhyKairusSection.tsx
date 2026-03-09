@@ -1,6 +1,7 @@
 import { useRef, useLayoutEffect, useCallback } from "react";
-import { Sparkles, Target, MessageCircle, Brain, Handshake, Check } from "lucide-react";
+import { FileCheck, Activity, Package, RefreshCw, Check, ArrowRight } from "lucide-react";
 import { LiquidGlass } from "@/components/ui/liquid-glass";
+import { Button } from "@/components/ui/button";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -8,28 +9,32 @@ gsap.registerPlugin(ScrollTrigger);
 
 const differentials = [
   {
-    icon: Sparkles,
-    title: "Soluções 100% personalizadas",
+    icon: FileCheck,
+    number: "01",
+    title: "Protocolo ANVISA",
+    description:
+      "Reunimos, revisamos e protocolamos toda a documentação exigida para a autorização de importação.",
   },
   {
-    icon: Target,
-    title: "Foco em impacto real no negócio",
+    icon: Activity,
+    number: "02",
+    title: "Acompanhamento do processo",
+    description:
+      "Monitoramos o andamento junto à ANVISA e respondemos a eventuais exigências em tempo hábil.",
   },
   {
-    icon: MessageCircle,
-    title: "Linguagem simples, sem tecnês desnecessário",
+    icon: Package,
+    number: "03",
+    title: "Importação e logística",
+    description:
+      "Após a autorização, cuidamos da importação do produto, desembaraço aduaneiro e entrega ao paciente.",
   },
   {
-    icon: Brain,
-    title: "IA aplicada de forma prática e responsável",
-  },
-  {
-    icon: Handshake,
-    title: "Parceria de longo prazo, não projeto descartável",
-  },
-  {
-    icon: Check,
-    title: "Tecnologia com estratégia, não só código",
+    icon: RefreshCw,
+    number: "04",
+    title: "Renovações futuras",
+    description:
+      "Gerenciamos as renovações periódicas da autorização para que seu tratamento nunca seja interrompido.",
   },
 ];
 
@@ -67,10 +72,11 @@ export function WhyKairusSection() {
         );
       }
 
-      // Differentials grid animation
+      // Differentials grid animation (apenas os 4 cards, não o botão)
       if (gridRef.current) {
-        const cards = gridRef.current.children;
-        
+        const cards = Array.from(gridRef.current.children).filter(
+          (el) => el.classList.contains("differential-card")
+        );
         gsap.fromTo(cards,
           { 
             y: 50, 
@@ -156,44 +162,84 @@ export function WhyKairusSection() {
           {/* Left Content */}
           <div ref={leftContentRef}>
             <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block gsap-hidden">
-              Por que Kairus
+              Nossa promessa
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 gsap-hidden">
-              Tecnologia com <span className="text-primary">estratégia</span>,{" "}
-              não só código
+              Você não deveria <span className="text-primary">lutar</span> para começar um tratamento.
             </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed gsap-hidden">
-              Entendemos que tecnologia só faz sentido quando gera resultado real. 
-              Por isso, cada projeto é tratado como uma parceria, não como um simples serviço.
-            </p>
+            {/* CTA em tópicos */}
+            <div className="gsap-hidden space-y-8">
+              <h3 className="text-2xl md:text-3xl font-semibold text-foreground leading-tight">
+                A gente cuida de tudo. Você só cuida de se tratar.
+              </h3>
+              <p className="text-muted-foreground text-lg md:text-xl leading-relaxed">
+                Muitas pessoas desistem do tratamento antes mesmo de começar, pela complexidade dos trâmites. A Natleaf existe para isso não acontecer mais.
+              </p>
+              <ul className="space-y-4 text-left max-w-2xl w-full text-base md:text-lg text-foreground font-medium leading-relaxed">
+                {[
+                  "Sem papelada para você resolver",
+                  "Sem ficar aguardando retorno da ANVISA sozinho",
+                  "Sem dúvidas sem resposta",
+                  "Com suporte real em cada etapa",
+                  "Com transparência total do processo",
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-3">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+                      <Check className="h-4 w-4" />
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
-          {/* Right - Differentials Grid */}
-          <div 
-            ref={gridRef} 
-            className="grid sm:grid-cols-2 gap-4"
-            style={{ perspective: "1000px" }}
-          >
-            {differentials.map((item) => (
-              <div
-                key={item.title}
-                className="gsap-hidden"
-                style={{ transformStyle: "preserve-3d" }}
-                onMouseEnter={handleCardEnter}
-                onMouseLeave={handleCardLeave}
-              >
-                <LiquidGlass className="group p-5 rounded-xl hover:border-primary/50 transition-colors duration-300 h-full cursor-pointer">
-                  <div className="flex items-start gap-3">
-                    <div className="differential-icon w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300">
-                      <item.icon className="w-5 h-5 text-primary" />
+          {/* Right - Differentials Grid + botão embaixo */}
+          <div className="flex flex-col items-center gap-8 w-full">
+            <div
+              ref={gridRef}
+              className="grid grid-cols-2 gap-x-4 gap-y-6 w-full"
+              style={{ perspective: "1000px" }}
+            >
+              {differentials.map((item) => (
+                <div
+                  key={item.title}
+                  className="differential-card gsap-hidden"
+                  style={{ transformStyle: "preserve-3d" }}
+                  onMouseEnter={handleCardEnter}
+                  onMouseLeave={handleCardLeave}
+                >
+                  <LiquidGlass className="group p-5 rounded-xl hover:border-primary/50 transition-colors duration-300 h-full cursor-pointer">
+                    <div className="flex items-start gap-3">
+                      <div className="differential-icon w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center flex-shrink-0 transition-all duration-300">
+                        <item.icon className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="text-foreground font-semibold leading-snug group-hover:text-primary transition-colors duration-300 mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-foreground font-medium leading-snug group-hover:text-primary transition-colors duration-300">
-                      {item.title}
-                    </p>
-                  </div>
-                </LiquidGlass>
-              </div>
-            ))}
+                  </LiquidGlass>
+                </div>
+              ))}
+            </div>
+            <Button
+              size="lg"
+              className="h-12 px-10 text-base w-full sm:w-auto [&_svg]:w-5 [&_svg]:h-5"
+              onClick={() =>
+                window.open(
+                  "https://wa.me/5521971201512?text=Ol%C3%A1!%20Quero%20essa%20ajuda%20agora.",
+                  "_blank"
+                )
+              }
+            >
+              Quero essa ajuda agora
+              <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
           </div>
         </div>
       </div>

@@ -9,18 +9,21 @@ gsap.registerPlugin(ScrollTrigger);
 const benefits = [
   {
     icon: Cog,
-    title: "Sistemas sob medida",
-    description: "Criamos a partir do seu processo, não de templates genéricos.",
+    title: "Ação no sistema endocanabinoide",
+    description:
+      "O CBD interage com receptores presentes em todo o organismo, regulando funções como dor, inflamação, sono, ansiedade e sistema imunológico.",
   },
   {
     icon: Target,
-    title: "Foco em resultados",
-    description: "Cada automação tem um propósito claro e mensurável.",
+    title: "Respaldado por evidências",
+    description:
+      "Milhares de estudos clínicos publicados em revistas científicas reconhecidas documentam os benefícios terapêuticos dos canabinoides.",
   },
   {
     icon: Sparkles,
-    title: "IA que funciona",
-    description: "Inteligência artificial integrada ao seu fluxo real de trabalho.",
+    title: "Sem efeito psicoativo",
+    description:
+      "Diferente do THC, o CBD não causa alterações psíquicas ou dependência, sendo seguro para uso contínuo com acompanhamento médico.",
   },
 ];
 
@@ -143,22 +146,22 @@ export function SolutionSection() {
           {/* Content */}
           <div ref={contentRef}>
             <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block gsap-hidden">
-              A Solução
+              O que é o tratamento
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 gsap-hidden">
-              IA personalizada, construída para o{" "}
-              <span className="text-primary">seu fluxo real</span>
+              Cannabis medicinal: <span className="text-primary">ciência</span>, não alternativa.
             </h2>
             <div className="space-y-4 text-muted-foreground text-lg gsap-hidden">
               <p>
-                Na Kairus, <strong className="text-foreground">não vendemos ferramentas prontas</strong>.
+                O canabidiol (CBD) é um composto extraído da planta{" "}
+                <strong className="text-foreground">Cannabis sativa</strong>, com ampla pesquisa científica
+                demonstrando eficácia no manejo de diversas condições de saúde.
               </p>
               <p>
-                Criamos sistemas inteligentes sob medida, pensados a partir do seu processo, 
-                do seu time e dos seus objetivos.
-              </p>
-              <p className="text-primary font-medium">
-                Cada projeto é único. Cada automação tem um propósito claro.
+                Hoje já existem{" "}
+                <strong className="text-foreground">mais de 50 condições</strong> com evidência científica de
+                benefício, incluindo epilepsia refratária, dor crônica, ansiedade, Parkinson, fibromialgia,
+                autismo e outras.
               </p>
             </div>
           </div>

@@ -1,21 +1,11 @@
-import { useRef, useState, useEffect, useLayoutEffect } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useRef, useEffect, useLayoutEffect } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const rotatingWords = [
-  "soluções digitais",
-  "experiências únicas", 
-  "resultados reais",
-  "inovação constante",
-  "sucesso garantido",
-  "produtos incríveis",
-  "impacto positivo",
-];
 
 export function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -25,7 +15,6 @@ export function HeroSection() {
   const gridRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -35,15 +24,6 @@ export function HeroSection() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.97]);
-
-  // Rotação automática das palavras
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentWordIndex((prev) => (prev + 1) % rotatingWords.length);
-    }, 2500);
-    
-    return () => clearInterval(interval);
-  }, []);
 
   // GSAP Animations on mount
   useLayoutEffect(() => {
@@ -203,29 +183,12 @@ export function HeroSection() {
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold tracking-tight text-foreground leading-[1.15] sm:leading-[1.1] mb-4 sm:mb-6"
               style={{ perspective: "1000px" }}
             >
-              <span className="hero-word inline-block">Transformamos</span>{" "}
+              <span className="hero-word inline-block">O tratamento</span>{" "}
               <br className="hidden sm:block" />
-              <span className="hero-word inline-block">ideias</span>{" "}
-              <span className="hero-word inline-block">em</span>{" "}
+              <span className="hero-word inline-block">que você precisa,</span>{" "}
               <br className="hidden sm:block" />
-              <span className="text-primary inline-block min-w-[280px] sm:min-w-[320px] md:min-w-[400px] relative overflow-visible py-1">
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={currentWordIndex}
-                    initial={{ y: 8, opacity: 0, filter: "blur(4px)" }}
-                    animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                    exit={{ y: -8, opacity: 0, filter: "blur(4px)" }}
-                    transition={{ 
-                      duration: 0.45, 
-                      ease: [0.33, 1, 0.68, 1],
-                    }}
-                    className="inline-block leading-tight"
-                    style={{ display: 'inline-block' }}
-                  >
-                    {rotatingWords[currentWordIndex]}
-                  </motion.span>
-                </AnimatePresence>
-              </span>
+              <span className="hero-word inline-block text-primary">sem a burocracia</span>{" "}
+              <span className="hero-word inline-block">que te paralisa.</span>
             </h1>
 
             {/* Subheadline */}
@@ -233,7 +196,7 @@ export function HeroSection() {
               ref={subheadlineRef}
               className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl sm:max-w-2xl mx-auto lg:mx-0 mb-8 sm:mb-10 leading-relaxed gsap-hidden"
             >
-              Automação e inteligência artificial sob medida para resolver problemas reais do seu negócio, do jeito certo, pensado para o seu momento.
+              A Natleaf cuida de cada detalhe do processo — da consulta médica à autorização da ANVISA. Você foca na saúde. A gente resolve o resto.
             </p>
 
             {/* CTAs */}
@@ -247,7 +210,7 @@ export function HeroSection() {
                 onClick={() => window.open('https://wa.me/5521971201512?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20um%20especialista.', '_blank')}
               >
                 <span className="relative z-10 flex items-center">
-                  Falar com um especialista
+                  Quero começar meu tratamento
                   <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </span>
               </Button>

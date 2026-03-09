@@ -1,26 +1,29 @@
 import { useRef, useLayoutEffect, useEffect, useCallback } from "react";
-import { AlertCircle, Puzzle, Brain } from "lucide-react";
+import { FileCheck, UserCheck, ShieldCheck } from "lucide-react";
 import { LiquidGlass } from "@/components/ui/liquid-glass";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const problems = [
+const brasilCards = [
   {
-    icon: Puzzle,
-    title: "Soluções genéricas",
-    description: "Ferramentas prontas que não se adaptam às particularidades do seu negócio.",
+    icon: FileCheck,
+    title: "Resolução ANVISA RDC 327/2019",
+    description:
+      "A resolução autoriza a importação de produtos de cannabis para fins medicinais mediante prescrição médica e autorização da agência.",
   },
   {
-    icon: AlertCircle,
-    title: "Complexidade excessiva",
-    description: "Sistemas tão complicados que seu time nunca consegue usar de verdade.",
+    icon: UserCheck,
+    title: "Qualquer médico pode prescrever",
+    description:
+      "Médico registrado no CRM pode solicitar autorização de importação junto à ANVISA para seus pacientes. Não é necessário especialista.",
   },
   {
-    icon: Brain,
-    title: "IA sem resultado",
-    description: "Promessas de inteligência artificial que nunca viram resultado prático.",
+    icon: ShieldCheck,
+    title: "Processo 100% legalizado",
+    description:
+      "Com a documentação correta, o paciente recebe autorização para importar o produto, que chega diretamente em casa, com total segurança jurídica.",
   },
 ];
 
@@ -138,23 +141,23 @@ export function ProblemSection() {
         {/* Header */}
         <div
           ref={headerRef}
-          className="max-w-3xl mb-16"
+          className="text-center max-w-3xl mx-auto mb-16"
         >
           <span className="text-base font-medium text-primary tracking-wide uppercase mb-4 block gsap-hidden">
-            O Problema
+            Regulamentação
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight mb-6 gsap-hidden">
-            Empresas sabem que precisam de{" "}
-            <span className="text-primary">automação e IA</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight leading-tight mb-6 gsap-hidden">
+            No Brasil, é possível —{" "}
+            <span className="text-primary">e é legal.</span>
           </h2>
           <p className="text-muted-foreground text-lg md:text-xl gsap-hidden">
-            O problema é quase sempre o mesmo:
+            Desde 2019, a ANVISA regulamentou o uso de produtos à base de cannabis para fins medicinais. Com o processo correto, qualquer paciente pode ter acesso ao tratamento de forma legal e segura.
           </p>
         </div>
 
-        {/* Problems Grid */}
+        {/* No Brasil - Cards */}
         <div ref={cardsRef} className="grid md:grid-cols-3 gap-6">
-          {problems.map((problem) => (
+          {brasilCards.map((problem) => (
             <div
               key={problem.title}
               className="gsap-hidden"
